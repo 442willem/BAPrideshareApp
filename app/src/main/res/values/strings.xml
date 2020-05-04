@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">RideshareApp</string>
+    <string name="username">username</string>
+    <string name="password">password</string>
+    <string name="login">login</string>
+    <string name="not_registerd">not_registerd?</string>
+    <string name="registerL">REGISTER</string>
+    <string name="not_registered">not registered?</string>
+    <string name="register">REGISTER</string>
+    <string name="registerR">REGISTER</string>
+    <string name="voornaam">voornaam</string>
+    <string name="achternaam">achternaam</string>
+    <string name="usernameR">username</string>
+    <string name="passwordR">password</string>
+    <string name="paypal_email">paypal-email</string>
+    <string name="alle_ritten">Alle Ritten</string>
+    <string name="all_routes">All Routes</string>
+    <string name="my_routes">My Routes</string>
+    <string name="my_conversations">My Conversations</string>
+    <string name="create_route">Create Route</string>
+    <string name="logout">Logout</string>
+    <string name="search_routes">Search Routes</string>
+    <string name="back">BACK</string>
+    <string name="home">HOME</string>
+    <string name="title_activity_route">Map</string>
+</resources>
