@@ -53,7 +53,12 @@ public class MainActivity extends AppCompatActivity {
         textViewWelcome.setText("Welcome "+user);
 
 
-
+        buttonSearchRoutes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToSearchRoutesActivity();
+            }
+        });
 
         buttonAllRoutes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +84,11 @@ public class MainActivity extends AppCompatActivity {
     private void goToAllRoutesActivity(){
         Intent allRoutes = new Intent(this,activity_all_routes.class);
         startActivity(allRoutes);
+    }
+
+    private void goToSearchRoutesActivity(){
+        Intent searchRoutes = new Intent(this,activity_search_route.class);
+        startActivity(searchRoutes);
     }
 
     private void goToLoginActivity(){

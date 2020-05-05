@@ -25,8 +25,15 @@ public class activity_vertrektijd extends AppCompatActivity {
         setContentView(R.layout.activity_vertrektijd);
 
         sp = getSharedPreferences("searchRoute",MODE_PRIVATE);
-        if(!sp.getBoolean("searching",false))sp = getSharedPreferences("createRoute",MODE_PRIVATE);
-        spEditor=sp.edit();
+        if(!sp.getBoolean("searching",false)){
+            sp = getSharedPreferences("createRoute",MODE_PRIVATE);
+            spEditor=sp.edit();
+        }
+        else {
+            spEditor=sp.edit();
+            spEditor.putBoolean("searching",false);
+        }
+
 
         date = (DatePicker) findViewById(R.id.datePicker_createRoute_vertrektijd);
         time= (TimePicker) findViewById(R.id.timePicker_createRoute_vertrektijd);

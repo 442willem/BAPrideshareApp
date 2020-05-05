@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity_search_route"></activity>
+        <activity android:name=".activity_searching_routes"></activity>
+        <activity android:name=".activity_search_route" />
         <activity android:name=".activity_eindtijd" />
         <activity android:name=".activity_vertrektijd" />
         <activity android:name=".activity_create_route" />

@@ -25,8 +25,15 @@ public class activity_eindtijd extends AppCompatActivity {
         setContentView(R.layout.activity_eindtijd);
 
         sp = getSharedPreferences("searchRoute",MODE_PRIVATE);
-        if(!sp.getBoolean("searching",false))sp = getSharedPreferences("createRoute",MODE_PRIVATE);
-        spEditor=sp.edit();
+        if(!sp.getBoolean("searching",false)){
+            sp = getSharedPreferences("createRoute",MODE_PRIVATE);
+            spEditor=sp.edit();
+        }
+        else {
+            spEditor.putBoolean("searching",false);
+            spEditor=sp.edit();
+        }
+
 
         date = (DatePicker) findViewById(R.id.datePicker_createRoute_eindtijd);
         time= (TimePicker) findViewById(R.id.timePicker_createRoute_eindtijd);

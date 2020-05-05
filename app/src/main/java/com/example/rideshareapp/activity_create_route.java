@@ -110,11 +110,14 @@ public class activity_create_route extends AppCompatActivity {
         }
         //if the user choose a date then fill the other data back in
         else if(sp.getBoolean("tijdenVerandert",false)){
+
             vertrek.setText(sp.getString("vertrek",""));
             aankomst.setText(sp.getString("aankomst",""));
+
             vertrektijdString.setText(sp.getString("vertrektijd",""));
             aankomsttijdString.setText(sp.getString("eindtijd",""));
-            vertrek.setText(sp.getString("vertrek",""));
+
+            aantalPersonen.setText(sp.getString("aantalPersonen",""));
             spEditor.putBoolean("tijdenVerandert",false).apply();
         }
 
@@ -122,8 +125,10 @@ public class activity_create_route extends AppCompatActivity {
         vertrektijd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 spEditor.putString("vertrek",vertrek.getText().toString()).apply();
                 spEditor.putString("aankomst",aankomst.getText().toString()).apply();
+
                 spEditor.putString("aantalPersonen",aantalPersonen.getText().toString()).apply();
                 spEditor.putString("eindtijd",aankomsttijdString.getText().toString()).apply();
 
@@ -136,8 +141,10 @@ public class activity_create_route extends AppCompatActivity {
         eindtijd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 spEditor.putString("vertrek",vertrek.getText().toString()).apply();
                 spEditor.putString("aankomst",aankomst.getText().toString()).apply();
+
                 spEditor.putString("aantalPersonen",aantalPersonen.getText().toString()).apply();
                 spEditor.putString("vertrektijd",vertrektijdString.getText().toString()).apply();
 
