@@ -17,6 +17,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class activity_route extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private SupportMapFragment mapFragment;
     private EditText vertrek;
     private EditText aankomst;
     private Button back;
@@ -32,8 +33,7 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         vertrek= (EditText) findViewById(R.id.editText_route_vertrekadres);
