@@ -31,7 +31,6 @@ public class activity_vertrektijd extends AppCompatActivity {
         }
         else {
             spEditor=sp.edit();
-            spEditor.putBoolean("searching",false);
         }
 
 
@@ -59,8 +58,16 @@ public class activity_vertrektijd extends AppCompatActivity {
                 spEditor.putString("vertrektijd",sb.toString()).apply();
                 spEditor.putBoolean("tijdenVerandert",true).apply();
 
-                Intent createRoute = new Intent(activity_vertrektijd.this,activity_create_route.class);
-                startActivity(createRoute);
+                Intent route;
+
+                if(!sp.getBoolean("searching",false)) {
+                    route = new Intent(activity_vertrektijd.this, activity_create_route.class);
+                }
+                else  {
+                    route = new Intent(activity_vertrektijd.this, activity_search_route.class);
+                    spEditor.putBoolean("searching",false).apply();
+                }
+                startActivity(route);
             }
         });
 

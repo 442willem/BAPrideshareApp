@@ -37,16 +37,12 @@ public class activity_searching_routes extends AppCompatActivity {
 
 
     ListView listViewAllRoutes;
-    List<Route> alleRoutes=new ArrayList<>();
+
     Button buttonBack;
     Button buttonRefresh;
-    TextView error;
 
     List<Route> routeList;
     Gson json;
-
-    JSONArray searchRoutes;
-    JSONObject searchRoute;
 
     String beginpunt;
     String eindpunt;
@@ -62,6 +58,7 @@ public class activity_searching_routes extends AppCompatActivity {
         setContentView(R.layout.activity_searching_routes);
 
         sp= getSharedPreferences("searchRoute",MODE_PRIVATE);
+
 
         beginpunt=sp.getString("vertrek","");
         eindpunt=sp.getString("aankomst","");
@@ -83,32 +80,23 @@ public class activity_searching_routes extends AppCompatActivity {
 
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
-                .encodedAuthority("192.168.1.39:8080")
+                .encodedAuthority("192.168.0.184:8080")
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("route_service")
-                .appendPath("searchRoutes");
+                .appendPath("searchRoutes")
+                .appendQueryParameter("beginpunt",beginpunt)
+                .appendQueryParameter("eindpunt",eindpunt)
+                .appendQueryParameter("begintijd",begintijd)
+                .appendQueryParameter("eindtijd",eindtijd);
 
         final String url = uriBuilder.build().toString();
 
         json = new Gson();
 
-
-        try {
-            searchRoute.put("beginpunt",beginpunt);
-            searchRoute.put("eindpunt",eindpunt);
-            searchRoute.put("eindtijdString",eindtijd);
-            searchRoute.put("vertrektijdString",begintijd);
-
-            searchRoutes.put(0,searchRoute);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-
         routeList=new ArrayList<>();
 
-        JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,searchRoutes, new Response.Listener<JSONArray>() {
+        JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(org.json.JSONArray response) {
                 Gson json = new Gson();
@@ -132,8 +120,8 @@ public class activity_searching_routes extends AppCompatActivity {
 
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError errore) {
-                error.setText(errore.toString());
+            public void onErrorResponse(VolleyError error) {
+               Toast.makeText(activity_searching_routes.this,"erorr:"+error.toString(),Toast.LENGTH_SHORT).show();
             }
         }) {
             //authorization header
