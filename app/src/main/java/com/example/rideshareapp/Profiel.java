@@ -1,6 +1,8 @@
 package com.example.rideshareapp;
 
-public class Profiel {
+import java.io.Serializable;
+
+public class Profiel implements Serializable {
 
     private int id;
 

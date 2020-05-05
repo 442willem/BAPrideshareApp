@@ -148,7 +148,9 @@ public class activity_all_routes extends AppCompatActivity {
             listViewAllRoutes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Route selectedItem = alleRoutes.get(position);
+                    Log.d("positie", String.valueOf(position));
+                    Route selectedItem = routeList.get(position);
+                    Log.d("geselecteerde", String.valueOf(selectedItem));
                     Intent myIntent = new Intent(view.getContext(), activity_route.class);
                     myIntent.putExtra("route", selectedItem);
                     startActivity(myIntent);
