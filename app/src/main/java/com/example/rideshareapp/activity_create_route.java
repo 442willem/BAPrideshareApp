@@ -38,6 +38,7 @@ import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +46,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -55,6 +57,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class activity_create_route extends AppCompatActivity {
@@ -75,6 +78,8 @@ public class activity_create_route extends AppCompatActivity {
 
     SharedPreferences sp;
     SharedPreferences.Editor spEditor;
+
+    JSONObject route;
 
     Gson json;
 
@@ -152,6 +157,7 @@ public class activity_create_route extends AppCompatActivity {
         });
 
 
+        //sending JSON object to server for creating route
         createRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,35 +190,29 @@ public class activity_create_route extends AppCompatActivity {
 
                     json = new Gson();
 
-                    Route route = new Route();
-                    route.setBeginpunt(beginpunt);
-                    route.setEindpunt(eindpunt);
+                     route = new JSONObject();
 
-                    Timestamp timestampEindtijd;
+                    int maxPers = 0;
+
                     try {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                        Date parsedDateEind = dateFormat.parse(eindpunt);
-                        timestampEindtijd = new java.sql.Timestamp(parsedDateEind.getTime());
-                    } catch(Exception e) {
-                        Log.e("timestampError",e.toString());
-                        timestampEindtijd =null;
+                        maxPers = Integer.parseInt(maxPersonen);
+                    } catch(NumberFormatException nfe) {
+                        System.out.println("Could not parse " + nfe);
                     }
-                    route.setEindtijd(timestampEindtijd);
 
-                    Timestamp timestampVertrektijd;
                     try {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-                        Date parsedDateVertrek = dateFormat.parse(eindpunt);
-                        timestampVertrektijd = new java.sql.Timestamp(parsedDateVertrek.getTime());
-                    } catch(Exception e) {
-                        Log.e("timestampError",e.toString());
-                        timestampVertrektijd =null;
+                        route.put("beginpunt",beginpunt);
+                        route.put("eindpunt",eindpunt);
+                        route.put("maxPersonen",maxPers);
+                        route.put("eindtijdString",eindtijd);
+                        route.put("vertrektijdString",begintijd);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    route.setEindtijd(timestampVertrektijd);
-                    //route.setMaxPersonen(maxPersonen);
 
 
-                    JsonObjectRequest requestAllRoutes = new JsonObjectRequest(Request.Method.POST, url,null, new Response.Listener<JSONObject>() {
+                    JsonObjectRequest requestAllRoutes = new JsonObjectRequest(Request.Method.POST, url,route, new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(org.json.JSONObject response) {
                             Gson json = new Gson();
@@ -235,6 +235,11 @@ public class activity_create_route extends AppCompatActivity {
 
                     requestQueue.add(requestAllRoutes);
 
+                    spEditor.putBoolean("created",true);
+                    spEditor.putBoolean("succesCreate",true);
+                    Intent created = new Intent(activity_create_route.this,MainActivity.class);
+                    startActivity(created);
+
                 }
             }
         });
@@ -242,6 +247,5 @@ public class activity_create_route extends AppCompatActivity {
 
 
     }
-
 
 }

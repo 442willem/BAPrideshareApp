@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -36,6 +37,14 @@ public class MainActivity extends AppCompatActivity {
         buttonMyConversations = findViewById(R.id.button_mijnBerichten);
         buttonCreateRoute = findViewById(R.id.button_createRoute);
         textViewWelcome = findViewById(R.id.textView_welcome);
+
+        sp= getSharedPreferences("createRoute",MODE_PRIVATE);
+        spEditor=sp.edit();
+
+        if(sp.getBoolean("succesCreate",false)){
+            Toast.makeText(MainActivity.this,"Route succesfully created",Toast.LENGTH_SHORT);
+            spEditor.putBoolean("succesCreate",false);
+        }
 
         sp=getSharedPreferences("settings", Context.MODE_PRIVATE);
         spEditor=sp.edit();

@@ -89,7 +89,7 @@ public class activity_all_routes extends AppCompatActivity {
             @Override
             public void onResponse(org.json.JSONArray response) {
                 Gson json = new Gson();
-                if(response.length()==0) Toast.makeText(activity_all_routes.this,"There are no routes to show",Toast.LENGTH_LONG);
+                if(response.length()==0) Toast.makeText(activity_all_routes.this,"There are no routes to show",Toast.LENGTH_LONG).show();
                 else {
                     for(int i=0;i<response.length();i++) {
                         Route r = new Route();
