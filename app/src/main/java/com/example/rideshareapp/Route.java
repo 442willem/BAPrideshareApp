@@ -2,11 +2,12 @@ package com.example.rideshareapp;
 
 import androidx.annotation.NonNull;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
-public class Route {
+public class Route implements Serializable {
     private int id;
 
     private String beginpunt;

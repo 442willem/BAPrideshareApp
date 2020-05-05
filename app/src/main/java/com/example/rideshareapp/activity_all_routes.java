@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -144,6 +145,15 @@ public class activity_all_routes extends AppCompatActivity {
         public void showList(){
             RouteListAdapter adapter = new RouteListAdapter(this,R.layout.adapter_view_layout,routeList);
             listViewAllRoutes.setAdapter(adapter);
+            listViewAllRoutes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Route selectedItem = alleRoutes.get(position);
+                    Intent myIntent = new Intent(view.getContext(), activity_route.class);
+                    myIntent.putExtra("route", selectedItem);
+                    startActivity(myIntent);
+                }
+            });
         }
 
     private void goToMainActivity(){

@@ -25,6 +25,8 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
     private SharedPreferences sp;
     private SharedPreferences.Editor spEditor;
 
+    private Route route;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +42,7 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
         checkRoute= (Button) findViewById(R.id.button_route_schrijfin);
 
 
-
+        route = (Route) getIntent().getSerializableExtra("route");
     }
 
 

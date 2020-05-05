@@ -188,7 +188,7 @@ public class activity_create_route extends AppCompatActivity {
                     route.setBeginpunt(beginpunt);
                     route.setEindpunt(eindpunt);
 
-                    Timestamp timestampEindtijd
+                    Timestamp timestampEindtijd;
                     try {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
                         Date parsedDateEind = dateFormat.parse(eindpunt);
@@ -199,7 +199,7 @@ public class activity_create_route extends AppCompatActivity {
                     }
                     route.setEindtijd(timestampEindtijd);
 
-                    Timestamp timestampVertrektijd
+                    Timestamp timestampVertrektijd;
                     try {
                         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
                         Date parsedDateVertrek = dateFormat.parse(eindpunt);
