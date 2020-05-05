@@ -73,11 +73,11 @@ public class activity_search_route extends AppCompatActivity {
         //if the user choose a date then fill the other data back in
         else if(sp.getBoolean("tijdenVerandert",false)){
 
-            vertrek.setText(sp.getString("vertrek",""));
-            aankomst.setText(sp.getString("aankomst",""));
+            vertrek.setText(sp.getString("vertrek",null));
+            aankomst.setText(sp.getString("aankomst",null));
 
-            vertrektijdString.setText(sp.getString("vertrektijd",""));
-            aankomsttijdString.setText(sp.getString("eindtijd",""));
+            vertrektijdString.setText(sp.getString("vertrektijd",null));
+            aankomsttijdString.setText(sp.getString("eindtijd",null));
 
             spEditor.putBoolean("tijdenVerandert",false).apply();
         }
@@ -135,10 +135,7 @@ public class activity_search_route extends AppCompatActivity {
                 String eindtijd = aankomsttijdString.getText().toString();
 
 
-                if(beginpunt == null || eindpunt == null || begintijd == null || eindtijd == null){
-                    Toast.makeText(activity_search_route.this,"Not everything is chosen",Toast.LENGTH_SHORT).show();
-                }
-                else {
+
 
                     spEditor.putString("vertrek",vertrek.getText().toString()).apply();
                     spEditor.putString("aankomst",aankomst.getText().toString()).apply();
@@ -157,7 +154,6 @@ public class activity_search_route extends AppCompatActivity {
                     Intent created = new Intent(activity_search_route.this,activity_searching_routes.class);
                     startActivity(created);
 
-                }
             }
         });
 
