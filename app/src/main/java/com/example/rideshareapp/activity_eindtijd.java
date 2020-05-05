@@ -25,14 +25,11 @@ public class activity_eindtijd extends AppCompatActivity {
         setContentView(R.layout.activity_eindtijd);
 
         sp = getSharedPreferences("searchRoute",MODE_PRIVATE);
-        if(!sp.getBoolean("searching",false)){
-            sp = getSharedPreferences("createRoute",MODE_PRIVATE);
-            spEditor=sp.edit();
+        if(!sp.getBoolean("searching",false)) {
+            sp = getSharedPreferences("createRoute", MODE_PRIVATE);
         }
-        else {
-            spEditor=sp.edit();
-            spEditor.putBoolean("searching",false);
-        }
+        spEditor=sp.edit();
+
 
 
         date = (DatePicker) findViewById(R.id.datePicker_createRoute_eindtijd);
@@ -59,8 +56,15 @@ public class activity_eindtijd extends AppCompatActivity {
                 spEditor.putString("eindtijd",sb.toString()).apply();
                 spEditor.putBoolean("tijdenVerandert",true).apply();
 
-                Intent createRoute = new Intent(activity_eindtijd.this,activity_create_route.class);
-                startActivity(createRoute);
+                Intent route;
+                if(!sp.getBoolean("searching",false)) {
+                    route = new Intent(activity_eindtijd.this, activity_create_route.class);
+                }
+                else  {
+                    route = new Intent(activity_eindtijd.this, activity_search_route.class);
+                    spEditor.putBoolean("searching",false).apply();
+                }
+                startActivity(route);
             }
             });
     }

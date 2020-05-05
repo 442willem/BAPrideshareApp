@@ -86,7 +86,7 @@ public class activity_search_route extends AppCompatActivity {
         vertrektijd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                spEditor.putBoolean("searching",true);
+                spEditor.putBoolean("searching",true).apply();
 
                 spEditor.putString("vertrek",vertrek.getText().toString()).apply();
                 spEditor.putString("aankomst",aankomst.getText().toString()).apply();
@@ -102,7 +102,7 @@ public class activity_search_route extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                spEditor.putBoolean("searching",true);
+                spEditor.putBoolean("searching",true).apply();
 
                 spEditor.putString("vertrek",vertrek.getText().toString()).apply();
                 spEditor.putString("aankomst",aankomst.getText().toString()).apply();
@@ -117,7 +117,7 @@ public class activity_search_route extends AppCompatActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                spEditor.putBoolean("searched",true);
+                spEditor.putBoolean("searched",true).apply();
                 Intent cancel = new Intent(activity_search_route.this,MainActivity.class);
                 startActivity(cancel);
             }
@@ -152,9 +152,9 @@ public class activity_search_route extends AppCompatActivity {
                     final RequestQueue requestQueue = Volley.newRequestQueue(activity_search_route.this);
 
 
-                    spEditor.putBoolean("searched",true);
+                    spEditor.putBoolean("searched",true).apply();
 
-                    Intent created = new Intent(activity_search_route.this,MainActivity.class);
+                    Intent created = new Intent(activity_search_route.this,activity_searching_routes.class);
                     startActivity(created);
 
                 }
