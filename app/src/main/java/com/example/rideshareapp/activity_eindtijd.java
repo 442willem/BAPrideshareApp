@@ -30,8 +30,8 @@ public class activity_eindtijd extends AppCompatActivity {
             spEditor=sp.edit();
         }
         else {
-            spEditor.putBoolean("searching",false);
             spEditor=sp.edit();
+            spEditor.putBoolean("searching",false);
         }
 
 
