@@ -24,7 +24,8 @@ public class activity_vertrektijd extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vertrektijd);
 
-        sp = getSharedPreferences("createRoute",MODE_PRIVATE);
+        sp = getSharedPreferences("searchRoute",MODE_PRIVATE);
+        if(!sp.getBoolean("searching",false))sp = getSharedPreferences("createRoute",MODE_PRIVATE);
         spEditor=sp.edit();
 
         date = (DatePicker) findViewById(R.id.datePicker_createRoute_vertrektijd);

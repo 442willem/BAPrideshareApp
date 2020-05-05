@@ -23,7 +23,9 @@ public class activity_eindtijd extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_eindtijd);
-        sp = getSharedPreferences("createRoute",MODE_PRIVATE);
+
+        sp = getSharedPreferences("searchRoute",MODE_PRIVATE);
+        if(!sp.getBoolean("searching",false))sp = getSharedPreferences("createRoute",MODE_PRIVATE);
         spEditor=sp.edit();
 
         date = (DatePicker) findViewById(R.id.datePicker_createRoute_eindtijd);
