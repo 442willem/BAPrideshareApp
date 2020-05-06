@@ -125,7 +125,7 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
                 for(int i=0;i<response.length();i++) {
                     String tussenstop=null;
                     try {
-                        tussenstop=json.fromJson(response.getJSONObject(i).toString(),String.class);
+                        tussenstop=response.getString(i);
                         Log.d("Tussenstop",tussenstop);
                     } catch (JSONException e) {
                         e.printStackTrace();

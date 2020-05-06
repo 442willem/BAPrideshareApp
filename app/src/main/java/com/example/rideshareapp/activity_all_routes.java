@@ -48,11 +48,16 @@ public class activity_all_routes extends AppCompatActivity {
     Button buttonRefresh;
     TextView error;
 
+    String url;
+    String ACCESS_TOKEN;
+    RequestQueue requestQueue;
 
     List<Route> routeList;
     Gson json;
 
-    SharedPreferences sp;
+    RouteListAdapter adapter ;
+
+            SharedPreferences sp;
     SharedPreferences.Editor spEditor;
 
     @Override
@@ -67,8 +72,10 @@ public class activity_all_routes extends AppCompatActivity {
         buttonRefresh = findViewById(R.id.button_alleRouten_refresh);
         listViewAllRoutes = findViewById(R.id.listViewAllRoutes);
 
-        final String ACCESS_TOKEN = sp.getString("Token",null);
-        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+        adapter = new RouteListAdapter(this,R.layout.adapter_view_layout,routeList);
+
+         ACCESS_TOKEN = sp.getString("Token",null);
+         requestQueue = Volley.newRequestQueue(this);
 
 
         Uri.Builder uriBuilder = new Uri.Builder();
@@ -79,40 +86,57 @@ public class activity_all_routes extends AppCompatActivity {
                 .appendPath("route_service")
                 .appendPath("alleRoutes");
 
-        final String url = uriBuilder.build().toString();
+        url = uriBuilder.build().toString();
 
          json = new Gson();
 
         routeList=new ArrayList<>();
 
-        JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(org.json.JSONArray response) {
-                Gson json = new Gson();
-                if(response.length()==0) Toast.makeText(activity_all_routes.this,"There are no routes to show",Toast.LENGTH_LONG).show();
-                else {
-                    for(int i=0;i<response.length();i++) {
-                        Route r = new Route();
-                        try {
-                            r.setProfiel();
-                            r=json.fromJson(response.getJSONObject(i).toString(),Route.class);
-                            Log.d("Route",r.toString());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d("Route","added");
-                        routeList.add(r);
+        listViewAllRoutes.setAdapter(adapter);
+        listViewAllRoutes.setOnItemClickListener((parent, view, position, id) -> {
 
+            Log.d("positie", String.valueOf(position));
+            Route selectedItem = routeList.get(position);
+
+            Log.d("geselecteerde", String.valueOf(selectedItem));
+
+            Intent myIntent = new Intent(view.getContext(), activity_route.class);
+            myIntent.putExtra("route", selectedItem);
+
+            startActivity(myIntent);
+        });
+
+        refreshList();
+
+
+        buttonBack.setOnClickListener(v -> goToMainActivity());
+
+        buttonRefresh.setOnClickListener(v -> refreshList());
+
+    }
+
+    private void refreshList(){
+
+        JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
+            Gson json = new Gson();
+            if(response.length()==0) Toast.makeText(activity_all_routes.this,"There are no routes to show",Toast.LENGTH_LONG).show();
+            else {
+                for(int i=0;i<response.length();i++) {
+                    Route r = new Route();
+                    try {
+                        r.setProfiel();
+                        r=json.fromJson(response.getJSONObject(i).toString(),Route.class);
+                        adapter.notifyDataSetChanged();
+                        Log.d("Route",r.toString());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
+                    Log.d("Route","added");
+                    routeList.add(r);
+
                 }
             }
-
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError errore) {
-                error.setText(errore.toString());
-            }
-        }) {
+        }, error ->  Toast.makeText(activity_all_routes.this,"there was an error getting the routes",Toast.LENGTH_SHORT).show()) {
             //authorization header
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError{
@@ -123,40 +147,9 @@ public class activity_all_routes extends AppCompatActivity {
             }};
 
         requestQueue.add(requestAllRoutes);
-        Log.d("Route", "grootte: "+routeList.size());
-        showList();
 
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               goToMainActivity();
-            }
-        });
-
-        buttonRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showList();
-            }
-        });
 
     }
-
-        public void showList(){
-            RouteListAdapter adapter = new RouteListAdapter(this,R.layout.adapter_view_layout,routeList);
-            listViewAllRoutes.setAdapter(adapter);
-            listViewAllRoutes.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Log.d("positie", String.valueOf(position));
-                    Route selectedItem = routeList.get(position);
-                    Log.d("geselecteerde", String.valueOf(selectedItem));
-                    Intent myIntent = new Intent(view.getContext(), activity_route.class);
-                    myIntent.putExtra("route", selectedItem);
-                    startActivity(myIntent);
-                }
-            });
-        }
 
     private void goToMainActivity(){
         Intent main = new Intent(this,MainActivity.class);
