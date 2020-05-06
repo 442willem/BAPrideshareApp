@@ -70,6 +70,7 @@ public class activity_search_route extends AppCompatActivity {
         if(sp.getBoolean("searched",false)){
             spEditor.clear().apply();
         }
+
         //if the user choose a date then fill the other data back in
         else if(sp.getBoolean("tijdenVerandert",false)){
 

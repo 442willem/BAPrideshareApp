@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     Button buttonLogout;
     Button buttonMyConversations;
     Button buttonCreateRoute;
+    Button buttonMyRites;
 
     SharedPreferences sp;
     SharedPreferences.Editor spEditor;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
         buttonAllRoutes = findViewById(R.id.button_AlleRouten);
         buttonMyRoutes = findViewById(R.id.button_mijnRouten);
         buttonSearchRoutes = findViewById(R.id.button_zoekRoutes);
+        buttonMyRites = findViewById(R.id.button_mijnRitten);
         buttonLogout = findViewById(R.id.button_logout);
         buttonMyConversations = findViewById(R.id.button_mijnBerichten);
         buttonCreateRoute = findViewById(R.id.button_createRoute);
@@ -53,32 +55,28 @@ public class MainActivity extends AppCompatActivity {
         textViewWelcome.setText("Welcome "+user);
 
 
-        buttonSearchRoutes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToSearchRoutesActivity();
-            }
+        buttonMyRoutes.setOnClickListener(v -> {
+            sp = getSharedPreferences("list",MODE_PRIVATE);
+            spEditor = sp.edit();
+            spEditor.putInt("soort",1).apply();
+            goToSearchingRoutesActivity();
         });
 
-        buttonAllRoutes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToAllRoutesActivity();
-            }
-        });
-        buttonCreateRoute.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToCreateRouteActivity();
-            }
+        buttonSearchRoutes.setOnClickListener(v -> {
+            sp = getSharedPreferences("list",MODE_PRIVATE);
+            spEditor = sp.edit();
+            spEditor.putInt("soort",0).apply();
+            goToSearchRoutesActivity();
         });
 
-        buttonLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToLoginActivity();
-            }
+        buttonMyRites.setOnClickListener(v ->{
+            goToSearchingRidesActivity();
         });
+
+        buttonAllRoutes.setOnClickListener(v -> goToAllRoutesActivity());
+        buttonCreateRoute.setOnClickListener(v -> goToCreateRouteActivity());
+
+        buttonLogout.setOnClickListener(v -> goToLoginActivity());
     }
 
     private void goToAllRoutesActivity(){
@@ -90,6 +88,17 @@ public class MainActivity extends AppCompatActivity {
         Intent searchRoutes = new Intent(this,activity_search_route.class);
         startActivity(searchRoutes);
     }
+
+    private void goToSearchingRoutesActivity(){
+        Intent searchRoutes = new Intent(this,activity_searching_routes.class);
+        startActivity(searchRoutes);
+    }
+
+    private void goToSearchingRidesActivity(){
+        Intent searchRoutes = new Intent(this,activity_rit_list.class);
+        startActivity(searchRoutes);
+    }
+
 
     private void goToLoginActivity(){
         Intent login = new Intent(this,Login_Activity.class);

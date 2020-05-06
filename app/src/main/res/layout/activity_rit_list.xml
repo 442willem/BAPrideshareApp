@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity_searching_routes"
+    tools:context=".activity_rit_list"
     android:orientation="vertical"
     android:gravity="center_horizontal">
 
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         android:textSize="25dp"
         android:textStyle="bold"
-        android:id="@+id/textView_welcomeRouteList"/>
+        android:id="@+id/textView_welcomeRitList"/>
 
 
 
@@ -29,11 +29,11 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:id="@+id/button_searchRoutes_back"
+            android:id="@+id/button_searchRit_back"
             android:text="Back"/>
 
         <Button
-            android:id="@+id/button_searchRoutes_refresh"
+            android:id="@+id/button_searchRit_refresh"
             android:layout_width="wrap_content"
             android:layout_marginRight="0dp"
             android:layout_height="40dp"
@@ -43,7 +43,7 @@
 
 
     <ListView
-        android:id="@+id/listViewSearchingRoutes"
+        android:id="@+id/listViewSearchingRides"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

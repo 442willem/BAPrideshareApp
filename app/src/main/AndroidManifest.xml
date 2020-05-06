@@ -7,7 +7,7 @@
          location permissions for the 'MyLocation' functionality.
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -18,7 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity_searching_routes"></activity>
+        <activity android:name=".activity_rit_list"></activity>
+        <activity android:name=".activity_searching_routes" />
         <activity android:name=".activity_search_route" />
         <activity android:name=".activity_eindtijd" />
         <activity android:name=".activity_vertrektijd" />

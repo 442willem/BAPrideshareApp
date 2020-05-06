@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class activity_searching_routes extends AppCompatActivity {
+public class activity_rit_list extends AppCompatActivity {
 
 
     ListView listViewAllRoutes;
@@ -49,100 +49,54 @@ public class activity_searching_routes extends AppCompatActivity {
     RequestQueue requestQueue;
     String url;
 
-    String beginpunt;
-    String eindpunt;
-    String begintijd;
-    String eindtijd;
     String username;
 
-    List<Route> routeList;
+    List<Rit> ridesList;
 
-    RouteListAdapter adapter;
+    RitListAdapter adapter;
 
-    int soortZoeken;
     SharedPreferences sp;
     SharedPreferences.Editor spEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_searching_routes);
+        setContentView(R.layout.activity_rit_list);
 
-        //kijken voor wat de routen list gebruikt moet worden
-        sp = getSharedPreferences("list",MODE_PRIVATE);
-        soortZoeken = sp.getInt("soort",-1);
-
-        if(soortZoeken == 0) {
-            sp = getSharedPreferences("searchRoute", MODE_PRIVATE);
-
-
-            beginpunt = sp.getString("vertrek", "");
-            eindpunt = sp.getString("aankomst", "");
-
-            begintijd = sp.getString("vertrektijd", "");
-            eindtijd = sp.getString("eindtijd", "");
-        }
 
         sp= getSharedPreferences("settings", Context.MODE_PRIVATE);
         spEditor=sp.edit();
 
         username = sp.getString("login",null);
 
-        welcomeMessage=findViewById(R.id.textView_welcomeRouteList);
-        buttonBack = findViewById(R.id.button_searchRoutes_back);
-        buttonRefresh = findViewById(R.id.button_searchRoutes_refresh);
-        listViewAllRoutes = findViewById(R.id.listViewSearchingRoutes);
+        welcomeMessage=findViewById(R.id.textView_welcomeRitList);
+        buttonBack = findViewById(R.id.button_searchRit_back);
+        buttonRefresh = findViewById(R.id.button_searchRit_refresh);
+        listViewAllRoutes = findViewById(R.id.listViewSearchingRides);
 
         json = new Gson();
-        routeList=new ArrayList<>();
+        ridesList=new ArrayList<>();
 
-        adapter = new RouteListAdapter(this, R.layout.adapter_view_layout, routeList);
+        adapter = new RitListAdapter(this, R.layout.adapter_view_layout, ridesList);
 
         listViewAllRoutes.setAdapter(adapter);
 
-        listViewAllRoutes.setOnItemClickListener((parent, view, position, id) -> {
 
-            Log.d("positie", String.valueOf(position));
-            Route selectedItem = routeList.get(position);
-
-            Log.d("geselecteerde", String.valueOf(selectedItem));
-
-            Intent myIntent = new Intent(view.getContext(), activity_route.class);
-            myIntent.putExtra("route", selectedItem);
-            startActivity(myIntent);
-        });
-
-
-         ACCESS_TOKEN = sp.getString("Token",null);
-         requestQueue = Volley.newRequestQueue(this);
+        ACCESS_TOKEN = sp.getString("Token",null);
+        requestQueue = Volley.newRequestQueue(this);
 
         //the different urls for every case : my routes , my rides, search rides
         Uri.Builder uriBuilder = new Uri.Builder();
-        if(soortZoeken == 1){
+
             uriBuilder.scheme("http")
                     .encodedAuthority("192.168.0.184:8080")
                     .appendPath("G4REST")
                     .appendPath("restApp")
-                    .appendPath("route_service")
-                    .appendPath("myRoute")
+                    .appendPath("rit_service")
+                    .appendPath("myRides")
                     .appendPath(username);
 
-            welcomeMessage.setText("My Routes");
-        }
-        else {
-            uriBuilder.scheme("http")
-                    .encodedAuthority("192.168.0.184:8080")
-                    .appendPath("G4REST")
-                    .appendPath("restApp")
-                    .appendPath("route_service")
-                    .appendPath("searchRoutes")
-                    .appendQueryParameter("beginpunt", beginpunt)
-                    .appendQueryParameter("eindpunt", eindpunt)
-                    .appendQueryParameter("begintijd", begintijd)
-                    .appendQueryParameter("eindtijd", eindtijd);
-
-            welcomeMessage.setText("Filtered Routes");
-        }
+            welcomeMessage.setText("My Rides");
 
         url = uriBuilder.build().toString();
 
@@ -159,24 +113,22 @@ public class activity_searching_routes extends AppCompatActivity {
         JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
             Gson json = new Gson();
             Log.d("TestRoute",response.toString());
-            if(response.length()==0) Toast.makeText(activity_searching_routes.this,"There are no routes to show",Toast.LENGTH_LONG).show();
+            if(response.length()==0) Toast.makeText(activity_rit_list.this,"There are no routes to show",Toast.LENGTH_LONG).show();
             else {
                 for(int i=0;i<response.length();i++) {
-                    Route r = new Route();
                     try {
-                        r.setProfiel();
-                        r=json.fromJson(response.getJSONObject(i).toString(),Route.class);
+                        Rit r=json.fromJson(response.getJSONObject(i).toString(),Rit.class);
                         adapter.add(r);
                         adapter.notifyDataSetChanged();
-                        Log.d("Route",r.toString());
+                        Log.d("Rit",r.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Log.d("Route","added");
+                    Log.d("Rit","added");
 
                 }
             }
-        }, error -> Toast.makeText(activity_searching_routes.this,"erorr:"+error.toString(),Toast.LENGTH_SHORT).show()) {
+        }, error -> Toast.makeText(activity_rit_list.this,"erorr:"+error.toString(),Toast.LENGTH_SHORT).show()) {
             //authorization header
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -187,7 +139,7 @@ public class activity_searching_routes extends AppCompatActivity {
             }};
 
         requestQueue.add(requestAllRoutes);
-        Log.d("Route", "grootte: "+routeList.size());
+        Log.d("Rit", "grootte: "+ridesList.size());
     }
 
     private void goToMainActivity(){
