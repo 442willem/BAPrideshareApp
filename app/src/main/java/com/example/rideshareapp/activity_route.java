@@ -28,6 +28,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.maps.GeoApiContext;
+import com.google.maps.errors.ApiException;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
@@ -49,6 +50,7 @@ import com.google.android.libraries.places.api.Places;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -72,6 +74,7 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
 
     Gson json;
    List<String> tussenstops;
+   String way[];
 
 
 
@@ -79,6 +82,12 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        route = (Route) getIntent().getSerializableExtra("route");
+        sp = getSharedPreferences("settings",MODE_PRIVATE);
+
+
+        tussenstops = getTussenstops();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -92,60 +101,13 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
         checkRoute= (Button) findViewById(R.id.button_route_schrijfin);
 
 
-        route = (Route) getIntent().getSerializableExtra("route");
         LatLng begin = getLocationFromAddress(route.getBeginpunt());
         LatLng eind = getLocationFromAddress(route.getEindpunt());
 
-        sp = getSharedPreferences("settings",MODE_PRIVATE);
 
 
-        final String ACCESS_TOKEN = sp.getString("Token",null);
-        final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-
-        Uri.Builder uriBuilder = new Uri.Builder();
-        uriBuilder.scheme("http")
-                .encodedAuthority("192.168.1.39:8080")
-                .appendPath("G4REST")
-                .appendPath("restApp")
-                .appendPath("route_service")
-                .appendPath("tussenstops")
-                //hier de id van de route ingeve
-                .appendPath(String.valueOf(route.getId()));
-
-        final String url = uriBuilder.build().toString();
-
-        json = new Gson();
-
-        tussenstops=new ArrayList<>();
-
-        JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
-            Gson json = new Gson();
-
-                for(int i=0;i<response.length();i++) {
-                    String tussenstop=null;
-                    try {
-                        tussenstop=response.getString(i);
-                        Log.d("Tussenstop",tussenstop);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    tussenstops.add(tussenstop);
-                    Log.d("Tussenstop","added");
-
-            }
-        }, error -> Toast.makeText(activity_route.this,"there was an error getting the waypoints",Toast.LENGTH_SHORT).show()) {
-            //authorization header
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("Content-Type", "application/json; charset=UTF-8");
-                params.put("Authorization", ACCESS_TOKEN);
-                return params;
-            }};
-
-        requestQueue.add(requestAllRoutes);
+        Log.d("Maybe", String.valueOf(tussenstops));
 
     }
 
@@ -161,12 +123,31 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+
         mMap = googleMap;
 
         LatLng begin = getLocationFromAddress(route.getBeginpunt());
         LatLng eind = getLocationFromAddress(route.getEindpunt());
         Log.d("begin", String.valueOf(begin));
         Log.d("eind", (eind.latitude+","+eind.longitude));
+        ArrayList<LatLng> wayp = new ArrayList<>();
+
+        for (String t : tussenstops){
+            LatLng temp = getLocationFromAddress(t);
+            Log.d("temp", String.valueOf(temp));
+            mMap.addMarker(new MarkerOptions().position(temp).title("TussenStop!"));
+            wayp.add(temp);
+        }
+        StringBuilder stbldr = new StringBuilder();
+        String next = "";
+        for(int n=0;n<tussenstops.size();n++){
+            stbldr.append(next);
+            stbldr.append(tussenstops.get(n));
+            next="|";
+        }
+        Log.d("tussenstops", stbldr.toString());
+
 
 
 
@@ -182,14 +163,32 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
         GeoApiContext context = new GeoApiContext.Builder()
                 .apiKey("AIzaSyAUI3IbCN38MjQJgCJptMXN4NluM7EdHns")
                 .build();
+
+
+            DirectionsApiRequest result = DirectionsApi.newRequest(context).origin((begin.latitude+","+begin.longitude))
+                    .destination((eind.latitude+","+eind.longitude))
+                    .waypoints(stbldr.toString())
+                    .optimizeWaypoints(true);
+
+
+
+
+
+
+
         DirectionsApiRequest req = DirectionsApi.getDirections(context, (begin.latitude+","+begin.longitude), (eind.latitude+","+eind.longitude));
+
+
         try {
             DirectionsResult res = req.await();
+            DirectionsResult ser = result.await();
+            Log.d("Mss", String.valueOf(ser.routes[0]));
+
 
             //Loop through legs and steps to get encoded polylines of each step
-            if (res.routes != null && res.routes.length > 0) {
+            if (ser.routes != null && ser.routes.length > 0) {
                 Log.d("HIER", "HIER opnieuw");
-                DirectionsRoute route = res.routes[0];
+                DirectionsRoute route = ser.routes[0];
                 Log.d("R", String.valueOf(res.routes[0]));
 
                 if (route.legs !=null) {
@@ -268,6 +267,57 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
             return p1;
      }catch (Exception e){}
         return null;
+    }
+
+    public List<String> getTussenstops(){
+        final String ACCESS_TOKEN = sp.getString("Token",null);
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+
+        Uri.Builder uriBuilder = new Uri.Builder();
+        uriBuilder.scheme("http")
+                .encodedAuthority("192.168.1.39:8080")
+                .appendPath("G4REST")
+                .appendPath("restApp")
+                .appendPath("route_service")
+                .appendPath("tussenstops")
+                //hier de id van de route ingeve
+                .appendPath(String.valueOf(route.getId()));
+
+        final String url = uriBuilder.build().toString();
+
+        json = new Gson();
+
+        tussenstops=new ArrayList<>();
+
+        JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
+            Gson json = new Gson();
+
+            for(int i=0;i<response.length();i++) {
+                String tussenstop=null;
+                try {
+                    tussenstop=response.getString(i);
+                    Log.d("Tussenstop",tussenstop);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                tussenstops.add(tussenstop);
+                Log.d("Tussenstop",tussenstops.toString());
+
+
+            }
+        }, error -> Toast.makeText(activity_route.this,"there was an error getting the waypoints",Toast.LENGTH_SHORT).show()){
+            //authorization header
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Content-Type", "application/json; charset=UTF-8");
+                params.put("Authorization", ACCESS_TOKEN);
+                return params;
+            }};
+        requestQueue.add(requestAllRoutes);
+        return tussenstops;
     }
 
 
