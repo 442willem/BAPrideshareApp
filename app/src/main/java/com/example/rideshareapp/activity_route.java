@@ -167,13 +167,12 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
         Log.d("begin", String.valueOf(begin));
         Log.d("eind", (eind.latitude+","+eind.longitude));
 
-        // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
 
-        LatLng barcelona = new LatLng(41.385064,2.173403);
+
+
         mMap.addMarker(new MarkerOptions().position(begin).title("Start"));
 
-        LatLng madrid = new LatLng(40.416775,-3.70379);
+
         mMap.addMarker(new MarkerOptions().position(eind).title("Stop"));
 
         LatLng zaragoza = new LatLng(41.648823,-0.889085);
