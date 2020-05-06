@@ -46,7 +46,6 @@ public class activity_all_routes extends AppCompatActivity {
     ListView listViewAllRoutes;
     Button buttonBack;
     Button buttonRefresh;
-    TextView error;
 
     String url;
     String ACCESS_TOKEN;
@@ -56,6 +55,7 @@ public class activity_all_routes extends AppCompatActivity {
     Gson json;
 
     RouteListAdapter adapter ;
+
 
             SharedPreferences sp;
     SharedPreferences.Editor spEditor;
@@ -71,6 +71,7 @@ public class activity_all_routes extends AppCompatActivity {
         buttonBack = findViewById(R.id.button_alleRouten_back);
         buttonRefresh = findViewById(R.id.button_alleRouten_refresh);
         listViewAllRoutes = findViewById(R.id.listViewAllRoutes);
+        routeList=new ArrayList<>();
 
         adapter = new RouteListAdapter(this,R.layout.adapter_view_layout,routeList);
 
@@ -80,7 +81,7 @@ public class activity_all_routes extends AppCompatActivity {
 
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
-                .encodedAuthority("192.168.1.39:8080")
+                .encodedAuthority("192.168.0.184:8080")
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("route_service")
@@ -90,13 +91,12 @@ public class activity_all_routes extends AppCompatActivity {
 
          json = new Gson();
 
-        routeList=new ArrayList<>();
 
         listViewAllRoutes.setAdapter(adapter);
         listViewAllRoutes.setOnItemClickListener((parent, view, position, id) -> {
 
             Log.d("positie", String.valueOf(position));
-            Route selectedItem = routeList.get(position);
+            Route selectedItem = adapter.getItem(position);
 
             Log.d("geselecteerde", String.valueOf(selectedItem));
 
@@ -126,17 +126,20 @@ public class activity_all_routes extends AppCompatActivity {
                     try {
                         r.setProfiel();
                         r=json.fromJson(response.getJSONObject(i).toString(),Route.class);
+                        adapter.add(r);
                         adapter.notifyDataSetChanged();
                         Log.d("Route",r.toString());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     Log.d("Route","added");
-                    routeList.add(r);
 
                 }
             }
-        }, error ->  Toast.makeText(activity_all_routes.this,"there was an error getting the routes",Toast.LENGTH_SHORT).show()) {
+        }, error ->  {
+            Log.d("Route",error.toString());
+            Toast.makeText(activity_all_routes.this,"there was an error getting the routes",Toast.LENGTH_SHORT).show();
+        }) {
             //authorization header
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError{

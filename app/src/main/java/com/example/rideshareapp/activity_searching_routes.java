@@ -80,8 +80,13 @@ public class activity_searching_routes extends AppCompatActivity {
         buttonRefresh = findViewById(R.id.button_searchRoutes_refresh);
         listViewAllRoutes = findViewById(R.id.listViewSearchingRoutes);
 
+        routeList=new ArrayList<>();
+
+        json = new Gson();
+
         adapter = new RouteListAdapter(this,R.layout.adapter_view_layout,routeList);
         listViewAllRoutes.setAdapter(adapter);
+
         listViewAllRoutes.setOnItemClickListener((parent, view, position, id) -> {
 
             Log.d("positie", String.valueOf(position));
@@ -115,31 +120,13 @@ public class activity_searching_routes extends AppCompatActivity {
 
         refreshList();
 
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToMainActivity();
-            }
-        });
+        buttonBack.setOnClickListener(v -> goToMainActivity());
 
-        buttonRefresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showList();
-            }
-        });
-
-    }
-
-    public void showList(){
+        buttonRefresh.setOnClickListener(v -> refreshList());
 
     }
 
     private void refreshList(){
-
-        json = new Gson();
-
-        routeList=new ArrayList<>();
 
         JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, new Response.Listener<JSONArray>() {
             @Override
@@ -152,24 +139,19 @@ public class activity_searching_routes extends AppCompatActivity {
                         try {
                             r.setProfiel();
                             r=json.fromJson(response.getJSONObject(i).toString(),Route.class);
+                            adapter.add(r);
                             adapter.notifyDataSetChanged();
                             Log.d("Route",r.toString());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         Log.d("Route","added");
-                        routeList.add(r);
 
                     }
                 }
             }
 
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(activity_searching_routes.this,"erorr:"+error.toString(),Toast.LENGTH_SHORT).show();
-            }
-        }) {
+        }, error -> Toast.makeText(activity_searching_routes.this,"erorr:"+error.toString(),Toast.LENGTH_SHORT).show()) {
             //authorization header
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
@@ -181,7 +163,6 @@ public class activity_searching_routes extends AppCompatActivity {
 
         requestQueue.add(requestAllRoutes);
         Log.d("Route", "grootte: "+routeList.size());
-        showList();
     }
 
     private void goToMainActivity(){

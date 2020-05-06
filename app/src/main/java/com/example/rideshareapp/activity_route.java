@@ -109,9 +109,9 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("route_service")
-                .appendPath("tussenstops")
+                .appendPath("tussenstops");
                 //hier de id van de route ingeve
-                .appendPath();
+                //.appendPath();
 
         final String url = uriBuilder.build().toString();
 
