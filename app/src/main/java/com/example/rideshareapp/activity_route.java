@@ -23,6 +23,7 @@ import com.google.maps.model.DirectionsResult;
 import com.google.maps.model.DirectionsRoute;
 import com.google.maps.model.DirectionsStep;
 import com.google.maps.model.EncodedPolyline;
+import com.google.maps.GeolocationApi;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,6 +39,7 @@ import com.google.android.libraries.places.api.Places;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 public class activity_route extends FragmentActivity implements OnMapReadyCallback {
 
@@ -73,8 +75,9 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
 
 
         route = (Route) getIntent().getSerializableExtra("route");
-        Log.d("HIER", "HIER");
-        Log.d("deze route", String.valueOf(route));
+        LatLng begin = getLocationFromAddress(route.getBeginpunt());
+        LatLng eind = getLocationFromAddress(route.getEindpunt());
+
     }
 
 
@@ -91,14 +94,19 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        LatLng begin = getLocationFromAddress(route.getBeginpunt());
+        LatLng eind = getLocationFromAddress(route.getEindpunt());
+        Log.d("begin", String.valueOf(begin));
+        Log.d("eind", (eind.latitude+","+eind.longitude));
+
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
 
         LatLng barcelona = new LatLng(41.385064,2.173403);
-        mMap.addMarker(new MarkerOptions().position(barcelona).title("Marker in Barcelona"));
+        mMap.addMarker(new MarkerOptions().position(begin).title("Start"));
 
         LatLng madrid = new LatLng(40.416775,-3.70379);
-        mMap.addMarker(new MarkerOptions().position(madrid).title("Marker in Madrid"));
+        mMap.addMarker(new MarkerOptions().position(eind).title("Stop"));
 
         LatLng zaragoza = new LatLng(41.648823,-0.889085);
         List<LatLng> path = new ArrayList();
@@ -106,7 +114,7 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
         GeoApiContext context = new GeoApiContext.Builder()
                 .apiKey("AIzaSyAUI3IbCN38MjQJgCJptMXN4NluM7EdHns")
                 .build();
-        DirectionsApiRequest req = DirectionsApi.getDirections(context, "41.385064,2.173403", "40.416775,-3.70379");
+        DirectionsApiRequest req = DirectionsApi.getDirections(context, (begin.latitude+","+begin.longitude), (eind.latitude+","+eind.longitude));
         try {
             DirectionsResult res = req.await();
 
@@ -163,10 +171,35 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
 
         mMap.getUiSettings().setZoomControlsEnabled(true);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(zaragoza, 6));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(begin, 12));
 
 
 
+    }
+    public LatLng  getLocationFromAddress(String strAddress){
+
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        LatLng  p1 = null;
+
+        try {
+            address = coder.getFromLocationName(strAddress,5);
+
+            if (address==null) {
+                return null;
+            }
+            Address location=address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+            Log.d("LAT", String.valueOf(location.getLatitude()));
+            Log.d("LNG", String.valueOf(location.getLongitude()));
+
+            p1 = new LatLng ((double) (location.getLatitude() ),
+                    (double) (location.getLongitude() ));
+
+            return p1;
+     }catch (Exception e){}
+        return null;
     }
 
 
