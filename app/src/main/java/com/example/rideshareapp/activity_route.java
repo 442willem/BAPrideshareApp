@@ -6,17 +6,27 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.DirectionsLeg;
 import com.google.maps.model.DirectionsResult;
@@ -36,9 +46,14 @@ import com.google.maps.DirectionsApi;
 import com.google.maps.DirectionsApiRequest;
 import com.google.android.libraries.places.api.Places;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 public class activity_route extends FragmentActivity implements OnMapReadyCallback {
@@ -54,6 +69,9 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
     private SharedPreferences.Editor spEditor;
     private Geocoder geocoder;
     private Address address;
+
+    Gson json;
+   List<String> tussenstops;
 
 
 
@@ -77,6 +95,56 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
         route = (Route) getIntent().getSerializableExtra("route");
         LatLng begin = getLocationFromAddress(route.getBeginpunt());
         LatLng eind = getLocationFromAddress(route.getEindpunt());
+
+        sp = getSharedPreferences("settings",MODE_PRIVATE);
+
+
+        final String ACCESS_TOKEN = sp.getString("Token",null);
+        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+
+        Uri.Builder uriBuilder = new Uri.Builder();
+        uriBuilder.scheme("http")
+                .encodedAuthority("192.168.1.39:8080")
+                .appendPath("G4REST")
+                .appendPath("restApp")
+                .appendPath("route_service")
+                .appendPath("tussenstops")
+                //hier de id van de route ingeve
+                .appendPath();
+
+        final String url = uriBuilder.build().toString();
+
+        json = new Gson();
+
+        tussenstops=new ArrayList<>();
+
+        JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
+            Gson json = new Gson();
+
+                for(int i=0;i<response.length();i++) {
+                    String tussenstop=null;
+                    try {
+                        tussenstop=json.fromJson(response.getJSONObject(i).toString(),String.class);
+                        Log.d("Tussenstop",tussenstop);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("Tussenstop","added");
+                    tussenstops.add(tussenstop);
+
+            }
+        }, error -> Toast.makeText(activity_route.this,"there was an error getting the waypoints",Toast.LENGTH_SHORT).show()) {
+            //authorization header
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("Content-Type", "application/json; charset=UTF-8");
+                params.put("Authorization", ACCESS_TOKEN);
+                return params;
+            }};
+
+        requestQueue.add(requestAllRoutes);
 
     }
 

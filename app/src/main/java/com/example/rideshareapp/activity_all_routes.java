@@ -44,10 +44,10 @@ import java.util.logging.Logger;
 public class activity_all_routes extends AppCompatActivity {
 
     ListView listViewAllRoutes;
-    List<Route> alleRoutes=new ArrayList<>();
     Button buttonBack;
     Button buttonRefresh;
     TextView error;
+
 
     List<Route> routeList;
     Gson json;
