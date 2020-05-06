@@ -111,7 +111,7 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
                 .appendPath("route_service")
                 .appendPath("tussenstops")
                 //hier de id van de route ingeve
-                .appendPath();
+                .appendPath(String.valueOf(route.getId()));
 
         final String url = uriBuilder.build().toString();
 
@@ -125,13 +125,14 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
                 for(int i=0;i<response.length();i++) {
                     String tussenstop=null;
                     try {
-                        tussenstop=json.fromJson(response.getJSONObject(i).toString(),String.class);
+                        tussenstop=response.getString(i);
                         Log.d("Tussenstop",tussenstop);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Log.d("Tussenstop","added");
+
                     tussenstops.add(tussenstop);
+                    Log.d("Tussenstop","added");
 
             }
         }, error -> Toast.makeText(activity_route.this,"there was an error getting the waypoints",Toast.LENGTH_SHORT).show()) {
