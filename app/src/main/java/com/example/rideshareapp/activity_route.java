@@ -1,5 +1,6 @@
 package com.example.rideshareapp;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -20,12 +22,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.gson.Gson;
 import com.google.maps.GeoApiContext;
 import com.google.maps.errors.ApiException;
@@ -52,6 +58,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -60,10 +67,12 @@ import java.util.concurrent.ExecutionException;
 
 public class activity_route extends FragmentActivity implements OnMapReadyCallback {
 
+    private static String TAG = activity_route.class.getSimpleName();
+
     private GoogleMap mMap;
     private SupportMapFragment mapFragment;
-    private EditText vertrek;
-    private EditText aankomst;
+    private View vertrek;
+    private View aankomst;
     private Button back;
     private Button checkRoute;
 
@@ -84,19 +93,66 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         route = (Route) getIntent().getSerializableExtra("route");
         sp = getSharedPreferences("settings",MODE_PRIVATE);
+        String apiKey = getString(R.string.google_maps_key);
+
 
 
         tussenstops = getTussenstops();
+
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
 
+
+
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), apiKey);
+        }
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME));
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
+        AutocompleteSupportFragment autocompleteFragment1 = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment1);
+        autocompleteFragment1.setPlaceFields(Arrays.asList(Place.Field.ADDRESS));
+        autocompleteFragment1.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                Log.i(TAG, "Place: " + place.getAddress() + ", " + place.getId());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
+
+
+
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        vertrek= (EditText) findViewById(R.id.editText_route_vertrekadres);
-        aankomst= (EditText) findViewById(R.id.editText_route_aankomstadres);
+        vertrek=  findViewById(R.id.autocomplete_fragment);
+        aankomst= findViewById(R.id.autocomplete_fragment1);
         back= (Button) findViewById(R.id.button_route_back);
         checkRoute= (Button) findViewById(R.id.button_route_schrijfin);
 
