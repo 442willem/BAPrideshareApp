@@ -59,6 +59,12 @@
         android:layout_marginTop="20dp"
         android:id="@+id/button_mijnBerichten"
         android:text="@string/my_conversations"/>
+    <Button
+        android:layout_width="250dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="20dp"
+        android:id="@+id/button_alleNotificaties"
+        android:text="My Notifications"/>
 
     <Button
         android:layout_width="250dp"

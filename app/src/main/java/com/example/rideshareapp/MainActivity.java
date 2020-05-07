@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     Button buttonMyConversations;
     Button buttonCreateRoute;
     Button buttonMyRites;
+    Button buttonMyNotifications;
 
     SharedPreferences sp;
     SharedPreferences.Editor spEditor;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         buttonSearchRoutes = findViewById(R.id.button_zoekRoutes);
         buttonMyRites = findViewById(R.id.button_mijnRitten);
         buttonLogout = findViewById(R.id.button_logout);
+        buttonMyNotifications = findViewById(R.id.button_alleNotificaties);
         buttonMyConversations = findViewById(R.id.button_mijnBerichten);
         buttonCreateRoute = findViewById(R.id.button_createRoute);
         textViewWelcome = findViewById(R.id.textView_welcome);
@@ -73,6 +75,10 @@ public class MainActivity extends AppCompatActivity {
             goToSearchingRidesActivity();
         });
 
+        buttonMyNotifications.setOnClickListener(v ->{
+            goToAllNotifications();
+        });
+
         buttonAllRoutes.setOnClickListener(v -> goToAllRoutesActivity());
         buttonCreateRoute.setOnClickListener(v -> goToCreateRouteActivity());
 
@@ -82,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
     private void goToAllRoutesActivity(){
         Intent allRoutes = new Intent(this,activity_all_routes.class);
         startActivity(allRoutes);
+    }
+    private void goToAllNotifications(){
+        Intent allNotifications = new Intent(this, activity_notification.class);
+        startActivity(allNotifications);
     }
 
     private void goToSearchRoutesActivity(){
