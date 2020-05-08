@@ -20,18 +20,23 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.api.Status;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class activity_search_route extends AppCompatActivity {
 
-    EditText vertrek;
-    EditText aankomst;
 
     Button vertrektijd;
     Button eindtijd;
@@ -54,9 +59,10 @@ public class activity_search_route extends AppCompatActivity {
         sp= getSharedPreferences("searchRoute",MODE_PRIVATE);
         spEditor=sp.edit();
 
+        String apiKey = getString(R.string.google_maps_key);
+        String TAG="autocompleetfragments";
 
-        vertrek = (EditText) findViewById(R.id.editText_searchRoute_beginpunt);
-        aankomst = (EditText) findViewById(R.id.editText_searchRoute_aankomstpunt);
+
         vertrektijd = (Button) findViewById(R.id.btn_searchRoute_begintijd);
         eindtijd = (Button) findViewById(R.id.btn_searchRoute_eindtijd);
 
@@ -74,8 +80,6 @@ public class activity_search_route extends AppCompatActivity {
         //if the user choose a date then fill the other data back in
         else if(sp.getBoolean("tijdenVerandert",false)){
 
-            vertrek.setText(sp.getString("vertrek",null));
-            aankomst.setText(sp.getString("aankomst",null));
 
             vertrektijdString.setText(sp.getString("vertrektijd",null));
             aankomsttijdString.setText(sp.getString("eindtijd",null));
@@ -83,14 +87,53 @@ public class activity_search_route extends AppCompatActivity {
             spEditor.putBoolean("tijdenVerandert",false).apply();
         }
 
+
+
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), apiKey, Locale.forLanguageTag("en"));
+        }
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragmentSearchRouteBegin);
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.ADDRESS));
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                spEditor.putString("vertrek",place.getAddress()).apply();
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId()+", "+place.getAddress());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
+        AutocompleteSupportFragment autocompleteFragment1 = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragmentSearchRouteEnd);
+        autocompleteFragment1.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.ADDRESS));
+        autocompleteFragment1.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                spEditor.putString("aankomst",place.getAddress()).apply();
+                Log.i(TAG, "Place: " + place.getAddress() + ", " + place.getId()+", "+place.getAddress());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
         //saving all the route info and going to vertrektijd activity to choose a date
         vertrektijd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 spEditor.putBoolean("searching",true).apply();
-
-                spEditor.putString("vertrek",vertrek.getText().toString()).apply();
-                spEditor.putString("aankomst",aankomst.getText().toString()).apply();
                 spEditor.putString("eindtijd",aankomsttijdString.getText().toString()).apply();
 
                 Intent vertrektijd = new Intent(activity_search_route.this, activity_vertrektijd.class);
@@ -104,9 +147,6 @@ public class activity_search_route extends AppCompatActivity {
             public void onClick(View v) {
 
                 spEditor.putBoolean("searching",true).apply();
-
-                spEditor.putString("vertrek",vertrek.getText().toString()).apply();
-                spEditor.putString("aankomst",aankomst.getText().toString()).apply();
                 spEditor.putString("vertrektijd",vertrektijdString.getText().toString()).apply();
 
                 Intent eindtijd = new Intent(activity_search_route.this, activity_eindtijd.class);
@@ -130,25 +170,11 @@ public class activity_search_route extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String beginpunt = vertrek.getText().toString();
-                String eindpunt = aankomst.getText().toString();
-                String begintijd = vertrektijdString.getText().toString();
-                String eindtijd = aankomsttijdString.getText().toString();
-
-
-
-
-                    spEditor.putString("vertrek",vertrek.getText().toString()).apply();
-                    spEditor.putString("aankomst",aankomst.getText().toString()).apply();
-                    spEditor.putString("eindtijd",aankomsttijdString.getText().toString()).apply();
-                    spEditor.putString("vertrektijd",vertrektijdString.getText().toString()).apply();
+                spEditor.putString("eindtijd",aankomsttijdString.getText().toString()).apply();
+                spEditor.putString("vertrektijd",vertrektijdString.getText().toString()).apply();
 
 
                     sp= getSharedPreferences("settings",MODE_PRIVATE);
-
-                    final String ACCESS_TOKEN = sp.getString("Token",null);
-                    final RequestQueue requestQueue = Volley.newRequestQueue(activity_search_route.this);
-
 
                     spEditor.putBoolean("searched",true).apply();
 

@@ -62,14 +62,15 @@ import java.util.Map;
 
 public class activity_create_route extends AppCompatActivity {
 
-    EditText vertrek;
-    EditText aankomst;
 
     Button vertrektijd;
     Button eindtijd;
 
     Button cancel;
     Button createRoute;
+
+    String beginpunt;
+    String eindpunt;
 
     EditText aantalPersonen;
 
@@ -91,9 +92,11 @@ public class activity_create_route extends AppCompatActivity {
         sp= getSharedPreferences("createRoute",MODE_PRIVATE);
         spEditor=sp.edit();
 
+        String apiKey = getString(R.string.google_maps_key);
+        String TAG="autocompleetfragments";
 
-        vertrek = (EditText) findViewById(R.id.editText_createRoute_beginpunt);
-        aankomst = (EditText) findViewById(R.id.editText_createRoute_aankomstpunt);
+
+
         vertrektijd = (Button) findViewById(R.id.btn_createRoute_begintijd);
         eindtijd = (Button) findViewById(R.id.btn_createRoute_eindtijd);
         aantalPersonen = (EditText) findViewById(R.id.editText_createRoute_passengers);
@@ -111,9 +114,6 @@ public class activity_create_route extends AppCompatActivity {
         //if the user choose a date then fill the other data back in
         else if(sp.getBoolean("tijdenVerandert",false)){
 
-            vertrek.setText(sp.getString("vertrek",""));
-            aankomst.setText(sp.getString("aankomst",""));
-
             vertrektijdString.setText(sp.getString("vertrektijd",""));
             aankomsttijdString.setText(sp.getString("eindtijd",""));
 
@@ -121,13 +121,50 @@ public class activity_create_route extends AppCompatActivity {
             spEditor.putBoolean("tijdenVerandert",false).apply();
         }
 
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), apiKey, Locale.forLanguageTag("en"));
+        }
+        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragmentCreateRouteBegin);
+        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.ADDRESS));
+        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                beginpunt=place.getAddress();
+                Log.i(TAG, "Place: " + place.getName() + ", " + place.getId()+", "+place.getAddress());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
+        AutocompleteSupportFragment autocompleteFragment1 = (AutocompleteSupportFragment)
+                getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragmentCreateRouteEnd);
+        autocompleteFragment1.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.ADDRESS));
+        autocompleteFragment1.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                // TODO: Get info about the selected place.
+                eindpunt=place.getAddress();
+                Log.i(TAG, "Place: " + place.getAddress());
+            }
+
+            @Override
+            public void onError(Status status) {
+                // TODO: Handle the error.
+                Log.i(TAG, "An error occurred: " + status);
+            }
+        });
+
         //saving all the route info and going to vertrektijd activity to choose a date
         vertrektijd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                spEditor.putString("vertrek",vertrek.getText().toString()).apply();
-                spEditor.putString("aankomst",aankomst.getText().toString()).apply();
 
                 spEditor.putString("aantalPersonen",aantalPersonen.getText().toString()).apply();
                 spEditor.putString("eindtijd",aankomsttijdString.getText().toString()).apply();
@@ -141,9 +178,6 @@ public class activity_create_route extends AppCompatActivity {
         eindtijd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                spEditor.putString("vertrek",vertrek.getText().toString()).apply();
-                spEditor.putString("aankomst",aankomst.getText().toString()).apply();
 
                 spEditor.putString("aantalPersonen",aantalPersonen.getText().toString()).apply();
                 spEditor.putString("vertrektijd",vertrektijdString.getText().toString()).apply();
@@ -168,8 +202,8 @@ public class activity_create_route extends AppCompatActivity {
         createRoute.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String beginpunt = vertrek.getText().toString();
-                String eindpunt = aankomst.getText().toString();
+
+
                 String begintijd = vertrektijdString.getText().toString();
                 String eindtijd = aankomsttijdString.getText().toString();
                 String maxPersonen = aantalPersonen.getText().toString();

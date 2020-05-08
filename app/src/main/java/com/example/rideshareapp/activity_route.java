@@ -108,7 +108,7 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
 
 
         if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), apiKey);
+            Places.initialize(getApplicationContext(), apiKey, Locale.forLanguageTag("en"));
         }
         AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
                 getSupportFragmentManager().findFragmentById(R.id.autocomplete_fragment);
