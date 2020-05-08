@@ -82,7 +82,7 @@ public class activity_notification extends AppCompatActivity {
         listViewAllNotifications = findViewById(R.id.listViewAllNotificaties);
         notificatieList=new ArrayList<>();
 
-        adapter = new NotificatieListAdapter(this,R.layout.adapter_view_layout,notificatieList);
+        adapter = new NotificatieListAdapter(this,R.layout.adapter_view_notificaties,notificatieList);
 
         ACCESS_TOKEN = sp.getString("Token",null);
         requestQueue = Volley.newRequestQueue(this);
@@ -112,7 +112,7 @@ public class activity_notification extends AppCompatActivity {
             Log.d("geselecteerde", String.valueOf(selectedItem));
 
             Intent myIntent = new Intent(view.getContext(), activity_route.class);
-            myIntent.putExtra("route", selectedItem.getRoute());
+            myIntent.putExtra("route", selectedItem.getRit().getRoute());
 
             startActivity(myIntent);
         });
@@ -128,7 +128,7 @@ public class activity_notification extends AppCompatActivity {
 
     private void refreshList(){
 
-        JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
+        JsonArrayRequest requestAllNotoficaties = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
             Gson json = new Gson();
             if(response.length()==0) Toast.makeText(activity_notification.this,"There are no Notifications to show",Toast.LENGTH_LONG).show();
             else {
@@ -160,7 +160,7 @@ public class activity_notification extends AppCompatActivity {
                 return params;
             }};
 
-        requestQueue.add(requestAllRoutes);
+        requestQueue.add(requestAllNotoficaties);
 
 
     }

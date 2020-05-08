@@ -32,10 +32,11 @@ public class NotificatieListAdapter extends ArrayAdapter<Notificatie> {
 
         String tijdStamp = getItem(position).getTijdstip().toString();
         String message = getItem(position).getMessage();
-        String routeBegin = getItem(position).getRoute().getBeginpunt();
-        String routeEind = getItem(position).getRoute().getEindpunt();
+        String routeBegin = getItem(position).getRit().getRoute().getBeginpunt();
+        String routeEind = getItem(position).getRit().getRoute().getEindpunt();
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
+        convertView = inflater.inflate(mResource,parent,false);
 
         TextView tijd = (TextView) convertView.findViewById(R.id.NotificatieTextView_tijd);
         TextView bericht = (TextView) convertView.findViewById(R.id.NotificatieTextView_message);
