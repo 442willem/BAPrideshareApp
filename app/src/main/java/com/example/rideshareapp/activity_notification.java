@@ -111,10 +111,12 @@ public class activity_notification extends AppCompatActivity {
 
             Log.d("geselecteerde", String.valueOf(selectedItem));
 
-            Intent myIntent = new Intent(view.getContext(), activity_route.class);
-            myIntent.putExtra("route", selectedItem.getRit().getRoute());
+            if(selectedItem.getRit() !=null) {
+                Intent myIntent = new Intent(view.getContext(), activity_route.class);
+                myIntent.putExtra("route", selectedItem.getRit().getRoute());
+                startActivity(myIntent);
+            }
 
-            startActivity(myIntent);
         });
 
         refreshList();

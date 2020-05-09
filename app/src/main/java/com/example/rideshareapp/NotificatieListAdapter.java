@@ -29,11 +29,17 @@ public class NotificatieListAdapter extends ArrayAdapter<Notificatie> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent){
-
         String tijdStamp = getItem(position).getTijdstip().toString();
         String message = getItem(position).getMessage();
-        String routeBegin = getItem(position).getRit().getRoute().getBeginpunt();
-        String routeEind = getItem(position).getRit().getRoute().getEindpunt();
+        String routeBegin="";
+        String routeEind="";
+        if(getItem(position).getRit() != null){
+
+             routeBegin = getItem(position).getRit().getRoute().getBeginpunt();
+             routeEind = getItem(position).getRit().getRoute().getEindpunt();
+
+        }
+
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource,parent,false);
@@ -45,8 +51,10 @@ public class NotificatieListAdapter extends ArrayAdapter<Notificatie> {
 
         tijd.setText("Notificatie op: " +tijdStamp);
         bericht.setText(message);
-        begin.setText("Op route van: " + routeBegin);
-        eind.setText("Naar: "+ routeEind);
+        if(getItem(position).getRit() != null) {
+            begin.setText("Op route van: " + routeBegin);
+            eind.setText("Naar: " + routeEind);
+        }
         return convertView;
 
 
