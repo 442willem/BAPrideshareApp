@@ -109,6 +109,10 @@ public class activity_conversation_menu extends AppCompatActivity {
 
     private void refreshList(){
 
+
+        adapter.clear();
+        profielList.clear();
+
         JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
             Gson json = new Gson();
             Log.d("TestConversation",response.toString());

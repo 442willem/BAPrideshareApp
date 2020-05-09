@@ -114,6 +114,10 @@ public class activity_all_routes extends AppCompatActivity {
 
     private void refreshList(){
 
+
+        adapter.clear();
+        routeList.clear();
+
         JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
             Gson json = new Gson();
             if(response.length()==0) Toast.makeText(activity_all_routes.this,"There are no routes to show",Toast.LENGTH_LONG).show();
