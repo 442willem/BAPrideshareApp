@@ -125,10 +125,7 @@ public class activity_conversation extends AppCompatActivity {
 
             requestQueue.add(createBericht);
             requestQueue.start();
-
             refreshList();
-
-
         });
 
     }
