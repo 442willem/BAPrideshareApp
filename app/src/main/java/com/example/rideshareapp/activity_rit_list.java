@@ -100,6 +100,20 @@ public class activity_rit_list extends AppCompatActivity {
 
         url = uriBuilder.build().toString();
 
+        listViewAllRoutes.setAdapter(adapter);
+        listViewAllRoutes.setOnItemClickListener((parent, view, position, id) -> {
+
+            Log.d("positie", String.valueOf(position));
+            Rit selectedItem = adapter.getItem(position);
+
+            Log.d("geselecteerde", String.valueOf(selectedItem));
+
+            Intent myIntent = new Intent(view.getContext(), activity_viewrit_p.class);
+            myIntent.putExtra("rit", selectedItem);
+
+            startActivity(myIntent);
+        });
+
         refreshList();
 
         buttonBack.setOnClickListener(v -> goToMainActivity());
