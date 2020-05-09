@@ -84,6 +84,9 @@ public class activity_conversation extends AppCompatActivity {
 
         refreshList();
 
+
+        listViewConversation.setSelection(adapter.getCount() - 1);
+
         buttonSendMessage.setOnClickListener(v -> {
 
 
@@ -102,6 +105,7 @@ public class activity_conversation extends AppCompatActivity {
             messageObject=new JSONObject();
             try{
                 messageObject.put("content",editTextMessage.getText().toString());
+                editTextMessage.setText("");
 
             }catch (JSONException e){
                 Log.e("MessageJSONException",e.toString());
@@ -120,9 +124,8 @@ public class activity_conversation extends AppCompatActivity {
                 }};
 
             requestQueue.add(createBericht);
+            requestQueue.start();
 
-            adapter.clear();
-            berichtList.clear();
             refreshList();
 
 
@@ -132,6 +135,10 @@ public class activity_conversation extends AppCompatActivity {
 
 
     private void refreshList(){
+
+        adapter.clear();
+        berichtList.clear();
+
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
                 .encodedAuthority("192.168.0.184:8080")
