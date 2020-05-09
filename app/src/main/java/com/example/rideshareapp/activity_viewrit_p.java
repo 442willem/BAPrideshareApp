@@ -121,9 +121,9 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sp= getSharedPreferences("settings",MODE_PRIVATE);
+                sp = getSharedPreferences("settings", MODE_PRIVATE);
 
-                final String ACCESS_TOKEN = sp.getString("Token",null);
+                final String ACCESS_TOKEN = sp.getString("Token", null);
                 final RequestQueue requestQueue = Volley.newRequestQueue(activity_viewrit_p.this);
                 Uri.Builder uriBuilder = new Uri.Builder();
                 uriBuilder.scheme("http")
@@ -135,32 +135,35 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
                         .appendPath(String.valueOf(rit.getId()));
 
                 final String url = uriBuilder.build().toString();
+                if (!rit.isGoedgekeurd()) {
+                    JsonObjectRequest requestAllRoutes = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(org.json.JSONObject response) {
 
-                JsonObjectRequest requestAllRoutes = new JsonObjectRequest(Request.Method.POST, url,null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(org.json.JSONObject response) {
+                            Log.d("CreateRoute", response.toString());
 
-                        Log.d("CreateRoute",response.toString());
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError errore) {
+                            Toast.makeText(activity_viewrit_p.this, "Your request has been cancelled", Toast.LENGTH_LONG).show();
+                        }
+                    }) {
+                        //authorization header
+                        @Override
+                        public Map<String, String> getHeaders() throws AuthFailureError {
+                            Map<String, String> params = new HashMap<String, String>();
+                            params.put("Content-Type", "application/json; charset=UTF-8");
+                            params.put("Authorization", ACCESS_TOKEN);
+                            return params;
+                        }
+                    };
 
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError errore) {
-                        Toast.makeText(activity_viewrit_p.this,"Your request has been cancelled",Toast.LENGTH_LONG).show();
-                    }
-                }) {
-                    //authorization header
-                    @Override
-                    public Map<String, String> getHeaders() throws AuthFailureError {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("Content-Type", "application/json; charset=UTF-8");
-                        params.put("Authorization", ACCESS_TOKEN);
-                        return params;
-                    }};
+                    requestQueue.add(requestAllRoutes);
+                    Intent cancel = new Intent(activity_viewrit_p.this, MainActivity.class);
+                    startActivity(cancel);
 
-                requestQueue.add(requestAllRoutes);
-                Intent cancel = new Intent(activity_viewrit_p.this,MainActivity.class);
-                startActivity(cancel);
+                } else{ Toast.makeText(activity_viewrit_p.this, "You have already been accepted", Toast.LENGTH_LONG).show(); }
 
             }
         });
