@@ -33,7 +33,7 @@ public class activity_passagiers extends AppCompatActivity {
 
     Button buttonRefresh;
 
-    TextView welcomeMessage;
+
 
     Gson json;
 
@@ -112,6 +112,10 @@ public class activity_passagiers extends AppCompatActivity {
 
 
     private void refreshList(){
+
+
+        adapter.clear();
+        ridesList.clear();
 
         JsonArrayRequest requestRides = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
             Gson json = new Gson();
