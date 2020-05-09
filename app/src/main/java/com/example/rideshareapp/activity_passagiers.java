@@ -89,6 +89,21 @@ public class activity_passagiers extends AppCompatActivity {
 
         url = uriBuilder.build().toString();
 
+
+        listViewAllRoutes.setAdapter(adapter);
+        listViewAllRoutes.setOnItemClickListener((parent, view, position, id) -> {
+
+            Log.d("positie", String.valueOf(position));
+            Rit selectedItem = adapter.getItem(position);
+
+            Log.d("geselecteerde", String.valueOf(selectedItem));
+
+            Intent myIntent = new Intent(view.getContext(), activity_viewrit.class);      //aanpassen nr nieuwe
+            myIntent.putExtra("rit", selectedItem);
+
+            startActivity(myIntent);
+        });
+
         refreshList();
 
         buttonRefresh.setOnClickListener(v -> refreshList());
