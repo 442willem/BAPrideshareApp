@@ -146,6 +146,20 @@ public class activity_searching_routes extends AppCompatActivity {
 
         url = uriBuilder.build().toString();
 
+        listViewAllRoutes.setAdapter(adapter);
+        listViewAllRoutes.setOnItemClickListener((parent, view, position, id) -> {
+
+            Log.d("positie", String.valueOf(position));
+            Route selectedItem = adapter.getItem(position);
+
+            Log.d("geselecteerde", String.valueOf(selectedItem));
+
+            Intent myIntent = new Intent(view.getContext(), activity_myroute.class);
+            myIntent.putExtra("route", selectedItem);
+
+            startActivity(myIntent);
+        });
+
         refreshList();
 
         buttonBack.setOnClickListener(v -> goToMainActivity());
