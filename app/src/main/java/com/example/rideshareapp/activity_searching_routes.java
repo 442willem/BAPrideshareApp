@@ -211,8 +211,4 @@ public class activity_searching_routes extends AppCompatActivity {
         Log.d("Route", "grootte: "+routeList.size());
     }
 
-    private void goToMainActivity(){
-        Intent main = new Intent(this,MainActivity.class);
-        startActivity(main);
-    }
 }
