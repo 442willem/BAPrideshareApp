@@ -33,7 +33,7 @@ public class NotificatieListAdapter extends ArrayAdapter<Notificatie> {
         String message = getItem(position).getMessage();
         String routeBegin="";
         String routeEind="";
-        if(getItem(position).getRit() != null){
+        if(getItem(position).getRit() != null && getItem(position).getRit().getRoute() != null ){
 
              routeBegin = getItem(position).getRit().getRoute().getBeginpunt();
              routeEind = getItem(position).getRit().getRoute().getEindpunt();

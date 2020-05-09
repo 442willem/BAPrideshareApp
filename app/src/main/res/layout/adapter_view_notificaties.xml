@@ -27,7 +27,7 @@
         android:layout_height="35dp"
         android:textStyle="bold"
         android:id="@+id/NotificatieTextView_begin"
-        android:text="begintijd"/>
+        android:text=""/>
 
 
     <TextView
@@ -35,6 +35,6 @@
         android:layout_height="35dp"
         android:textStyle="bold"
         android:id="@+id/NotificatieTextView_eind"
-        android:text="eindtijd"/>
+        android:text=""/>
 
 </LinearLayout>

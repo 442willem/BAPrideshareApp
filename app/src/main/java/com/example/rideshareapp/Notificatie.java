@@ -120,6 +120,9 @@ public class Notificatie {
             case "ritChange":
                 message="A ride you have requested has been changed";
                 break;
+            case "bericht":
+                message="You've got a message of a driver on a ride you booked in on";
+                break;
             default:
                 message=null;
         }
