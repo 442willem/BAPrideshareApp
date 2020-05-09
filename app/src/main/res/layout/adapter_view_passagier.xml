@@ -11,7 +11,7 @@
         android:layout_height="35dp"
         android:textStyle="bold"
         android:id="@+id/tv_passagier_name"
-        android:text="eind"/>
+        android:text="name"/>
 
 
     <TextView
@@ -19,7 +19,7 @@
         android:layout_height="35dp"
         android:textStyle="bold"
         android:id="@+id/tv_passagier_pickup"
-        android:text="begintijd"/>
+        android:text="ophalen"/>
 
 
     <TextView
@@ -27,6 +27,15 @@
         android:layout_height="35dp"
         android:id="@+id/tv_passagier_numberOfPlaces"
         android:textStyle="bold"
-        android:text="begin"/>
+        android:text="number"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:id="@+id/tv_passagier_accepted"
+        android:textStyle="bold"
+        android:text="accep"/>
+
+
 
 </LinearLayout>

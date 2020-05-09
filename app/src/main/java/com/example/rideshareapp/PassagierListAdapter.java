@@ -33,6 +33,7 @@ public class PassagierListAdapter extends ArrayAdapter<Rit> {
         String username = getItem(position).getPassagier().getLogin();
         String number= String.valueOf(getItem(position).getAantalPersonen());
         String pickupAdress = getItem(position).getBeginpunt();
+        boolean geaccepteerd = getItem(position).isGoedgekeurd();
 
 
         LayoutInflater inflater = LayoutInflater.from(mContext);
@@ -42,11 +43,19 @@ public class PassagierListAdapter extends ArrayAdapter<Rit> {
         TextView name = convertView.findViewById(R.id.tv_passagier_name);
         TextView pickup = convertView.findViewById(R.id.tv_passagier_pickup);
         TextView places = convertView.findViewById(R.id.tv_passagier_numberOfPlaces);
+        TextView goedgekeurd=convertView.findViewById(R.id.tv_passagier_accepted);
 
 
         name.setText("name: "+username);
         pickup.setText("Pickup At: "+pickupAdress);
         places.setText("Number of Places: "+number);
+
+        if(geaccepteerd){
+            goedgekeurd.setText("accepted: yes");
+        }
+        else{
+            goedgekeurd.setText("accepted: no");
+        }
 
         return convertView;
 
