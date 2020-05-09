@@ -27,6 +27,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.Place;
@@ -191,7 +192,8 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
         for (String t : tussenstops){
             LatLng temp = getLocationFromAddress(t);
             Log.d("temp", String.valueOf(temp));
-            mMap.addMarker(new MarkerOptions().position(temp).title("TussenStop!"));
+            mMap.addMarker(new MarkerOptions().position(temp).title("TussenStop!")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));;
             wayp.add(temp);
         }
         StringBuilder stbldr = new StringBuilder();
