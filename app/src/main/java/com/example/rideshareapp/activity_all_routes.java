@@ -44,7 +44,7 @@ import java.util.logging.Logger;
 public class activity_all_routes extends AppCompatActivity {
 
     ListView listViewAllRoutes;
-    Button buttonBack;
+
     Button buttonRefresh;
 
     String url;
@@ -68,7 +68,6 @@ public class activity_all_routes extends AppCompatActivity {
         sp= getSharedPreferences("settings", Context.MODE_PRIVATE);
         spEditor=sp.edit();
 
-        buttonBack = findViewById(R.id.button_alleRouten_back);
         buttonRefresh = findViewById(R.id.button_alleRouten_refresh);
         listViewAllRoutes = findViewById(R.id.listViewAllRoutes);
         routeList=new ArrayList<>();
@@ -108,8 +107,6 @@ public class activity_all_routes extends AppCompatActivity {
 
         refreshList();
 
-
-        buttonBack.setOnClickListener(v -> goToMainActivity());
 
         buttonRefresh.setOnClickListener(v -> refreshList());
 

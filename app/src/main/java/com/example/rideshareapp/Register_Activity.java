@@ -40,7 +40,7 @@ public class Register_Activity extends AppCompatActivity {
     private EditText textPasswordRegister;
     private TextView textViewErrorRegister;
     private Button buttonRegister;
-    private  Button buttonBack;
+
 
 
 
@@ -62,7 +62,7 @@ public class Register_Activity extends AppCompatActivity {
         textViewErrorRegister= findViewById(R.id.textView_errorRegister);
 
         buttonRegister= findViewById(R.id.button_register);
-        buttonBack= findViewById(R.id.button_back);
+
         profiel = new JSONObject();
 
         sp= getSharedPreferences("registratie",MODE_PRIVATE);
@@ -78,13 +78,6 @@ public class Register_Activity extends AppCompatActivity {
                 .appendPath("registratie");
 
         final String url = uriBuilder.build().toString();
-
-        buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToLoginActivity();
-            }
-        });
 
         buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override

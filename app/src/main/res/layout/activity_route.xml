@@ -74,14 +74,7 @@
         android:text="Check me"
         android:layout_marginLeft="45dp"
         />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:text="Back"
-        android:id="@+id/button_route_back"
-        android:layout_marginLeft="45dp"
-        android:layout_marginRight="45dp"
-        />
+
     </LinearLayout>
 
 

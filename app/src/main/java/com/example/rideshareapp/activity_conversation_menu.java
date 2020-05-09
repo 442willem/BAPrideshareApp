@@ -38,7 +38,6 @@ public class activity_conversation_menu extends AppCompatActivity {
 
     List<Profiel> profielList;
 
-    Button buttonBack;
     Button buttonRefresh;
 
 
@@ -58,7 +57,6 @@ public class activity_conversation_menu extends AppCompatActivity {
 
         username = sp.getString("login", null);
 
-        buttonBack = findViewById(R.id.button_MyConversations_back);
         buttonRefresh = findViewById(R.id.button_MyConversations_refresh);
         listViewAllConversations = findViewById(R.id.listViewMyConversations);
 
@@ -98,7 +96,6 @@ public class activity_conversation_menu extends AppCompatActivity {
 
         refreshList();
 
-        buttonBack.setOnClickListener(v -> goToMainActivity());
 
         buttonRefresh.setOnClickListener(v -> refreshList());
 

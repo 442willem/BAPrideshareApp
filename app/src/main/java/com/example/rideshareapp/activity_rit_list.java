@@ -38,7 +38,6 @@ public class activity_rit_list extends AppCompatActivity {
 
     ListView listViewAllRoutes;
 
-    Button buttonBack;
     Button buttonRefresh;
 
     TextView welcomeMessage;
@@ -70,7 +69,6 @@ public class activity_rit_list extends AppCompatActivity {
         username = sp.getString("login",null);
 
         welcomeMessage=findViewById(R.id.textView_welcomeRitList);
-        buttonBack = findViewById(R.id.button_searchRit_back);
         buttonRefresh = findViewById(R.id.button_searchRit_refresh);
         listViewAllRoutes = findViewById(R.id.listViewSearchingRides);
 
@@ -101,8 +99,6 @@ public class activity_rit_list extends AppCompatActivity {
         url = uriBuilder.build().toString();
 
         refreshList();
-
-        buttonBack.setOnClickListener(v -> goToMainActivity());
 
         buttonRefresh.setOnClickListener(v -> refreshList());
 

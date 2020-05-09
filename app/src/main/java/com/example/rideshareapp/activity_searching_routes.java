@@ -38,7 +38,6 @@ public class activity_searching_routes extends AppCompatActivity {
 
     ListView listViewAllRoutes;
 
-    Button buttonBack;
     Button buttonRefresh;
 
     TextView welcomeMessage;
@@ -89,7 +88,7 @@ public class activity_searching_routes extends AppCompatActivity {
         username = sp.getString("login",null);
 
         welcomeMessage=findViewById(R.id.textView_welcomeRouteList);
-        buttonBack = findViewById(R.id.button_searchRoutes_back);
+
         buttonRefresh = findViewById(R.id.button_searchRoutes_refresh);
         listViewAllRoutes = findViewById(R.id.listViewSearchingRoutes);
 
@@ -162,7 +161,6 @@ public class activity_searching_routes extends AppCompatActivity {
 
         refreshList();
 
-        buttonBack.setOnClickListener(v -> goToMainActivity());
 
         buttonRefresh.setOnClickListener(v -> refreshList());
 

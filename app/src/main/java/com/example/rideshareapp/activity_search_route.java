@@ -41,7 +41,6 @@ public class activity_search_route extends AppCompatActivity {
     Button vertrektijd;
     Button eindtijd;
 
-    Button cancel;
     Button searchRoute;
 
     TextView vertrektijdString;
@@ -66,7 +65,6 @@ public class activity_search_route extends AppCompatActivity {
         vertrektijd = (Button) findViewById(R.id.btn_searchRoute_begintijd);
         eindtijd = (Button) findViewById(R.id.btn_searchRoute_eindtijd);
 
-        cancel = (Button) findViewById(R.id.btn_searchRoute_cancel);
         searchRoute = (Button) findViewById(R.id.btn_searchRoute);
 
         vertrektijdString = (TextView) findViewById(R.id.tv_searchRoute_begintijd);
@@ -154,15 +152,6 @@ public class activity_search_route extends AppCompatActivity {
             }
         });
 
-        //cancel button to go back to main menu
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spEditor.putBoolean("searched",true).apply();
-                Intent cancel = new Intent(activity_search_route.this,MainActivity.class);
-                startActivity(cancel);
-            }
-        });
 
 
         //saving all the values for the search route query

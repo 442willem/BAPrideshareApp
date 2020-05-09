@@ -66,7 +66,7 @@ public class activity_create_route extends AppCompatActivity {
     Button vertrektijd;
     Button eindtijd;
 
-    Button cancel;
+
     Button createRoute;
 
     String beginpunt;
@@ -101,7 +101,6 @@ public class activity_create_route extends AppCompatActivity {
         eindtijd = (Button) findViewById(R.id.btn_createRoute_eindtijd);
         aantalPersonen = (EditText) findViewById(R.id.editText_createRoute_passengers);
 
-        cancel = (Button) findViewById(R.id.btn_createRoute_cancel);
         createRoute = (Button) findViewById(R.id.btn_createRoute);
 
         vertrektijdString = (TextView) findViewById(R.id.tv_createRoute_begintijd);
@@ -187,15 +186,6 @@ public class activity_create_route extends AppCompatActivity {
             }
         });
 
-        //cancel button to go back to main menu
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                spEditor.putBoolean("created",true);
-                Intent cancel = new Intent(activity_create_route.this,MainActivity.class);
-                startActivity(cancel);
-            }
-        });
 
 
         //sending JSON object to server for creating route

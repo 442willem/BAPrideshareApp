@@ -154,14 +154,6 @@
         android:id="@+id/btn_createRoute"/>
 
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Cancel"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="19dp"
-        android:id="@+id/btn_createRoute_cancel"/>
-
 
 
 
