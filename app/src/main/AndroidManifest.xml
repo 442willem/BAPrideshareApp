@@ -18,9 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".activity_passagiers"></activity>
         <activity android:name=".activity_myroute" />
-        <activity android:name=".activity_conversation"></activity>
+        <activity android:name=".activity_conversation" />
         <activity android:name=".activity_conversation_menu" />
         <activity android:name=".activity_viewrit_p"/>
         <activity android:name=".activity_rit_list" />

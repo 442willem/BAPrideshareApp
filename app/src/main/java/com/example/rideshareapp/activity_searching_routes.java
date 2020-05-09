@@ -152,11 +152,16 @@ public class activity_searching_routes extends AppCompatActivity {
             Route selectedItem = adapter.getItem(position);
 
             Log.d("geselecteerde", String.valueOf(selectedItem));
-
-            Intent myIntent = new Intent(view.getContext(), activity_myroute.class);
-            myIntent.putExtra("route", selectedItem);
-
-            startActivity(myIntent);
+            if(soortZoeken==0) {
+                Intent myIntent = new Intent(view.getContext(), activity_myroute.class);
+                myIntent.putExtra("route", selectedItem);
+                startActivity(myIntent);
+            }
+            else{
+                Intent passagiers = new Intent(view.getContext(),activity_passagiers.class);
+                passagiers.putExtra("route",selectedItem);
+                startActivity(passagiers);
+            }
         });
 
         refreshList();

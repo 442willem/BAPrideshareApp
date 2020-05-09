@@ -153,7 +153,6 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
 
         vertrek=  findViewById(R.id.autocomplete_fragment);
         aankomst= findViewById(R.id.autocomplete_fragment1);
-        back= (Button) findViewById(R.id.button_route_back);
         checkRoute= (Button) findViewById(R.id.button_route_schrijfin);
 
 
