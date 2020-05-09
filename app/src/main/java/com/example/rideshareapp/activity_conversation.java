@@ -121,8 +121,6 @@ public class activity_conversation extends AppCompatActivity {
 
             requestQueue.add(createBericht);
 
-            adapter.clear();
-            berichtList.clear();
             refreshList();
 
 
@@ -132,6 +130,10 @@ public class activity_conversation extends AppCompatActivity {
 
 
     private void refreshList(){
+
+        adapter.clear();
+        berichtList.clear();
+
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
                 .encodedAuthority("192.168.0.184:8080")
