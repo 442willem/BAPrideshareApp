@@ -18,8 +18,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity_rit_list"></activity>
-        <activity android:name=".activity_notification"></activity>
+        <activity android:name=".activity_conversation"></activity>
+        <activity android:name=".activity_conversation_menu" />
+        <activity android:name=".activity_rit_list" />
+        <activity android:name=".activity_notification" />
         <activity android:name=".activity_searching_routes" />
         <activity android:name=".activity_search_route" />
         <activity android:name=".activity_eindtijd" />

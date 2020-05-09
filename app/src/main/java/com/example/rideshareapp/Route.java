@@ -22,8 +22,6 @@ public class Route implements Serializable {
 
     private Profiel bestuurder;
 
-    private Date eindtijdDate;
-    private Date vertrektijdDate;
     private String tussenstops;
 
     public int getId() {
@@ -116,24 +114,6 @@ public class Route implements Serializable {
         this.eindtijd=eindtijd;
         this.vertrektijd=vertrektijd;
         this.bestuurder=bestuurder;
-    }
-
-    public Date getEindtijdDate() {
-        return eindtijdDate;
-    }
-
-    public void setEindtijdDate(Date eindtijdDate) {
-        this.eindtijdDate = eindtijdDate;
-        this.eindtijd= new Timestamp(eindtijdDate.getTime());
-    }
-
-    public Date getVertrektijdDate() {
-        return vertrektijdDate;
-    }
-
-    public void setVertrektijdDate(Date vertrektijdDate) {
-        this.vertrektijdDate = vertrektijdDate;
-        this.vertrektijd= new Timestamp(vertrektijdDate.getTime());
     }
 
     public String getTussenstops() {

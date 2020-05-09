@@ -56,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
         String user = sp.getString("login","error");
         textViewWelcome.setText("Welcome "+user);
 
-
+        buttonMyConversations.setOnClickListener(v -> {
+            Intent searchRoutes = new Intent(MainActivity.this,activity_conversation_menu.class);
+            startActivity(searchRoutes);
+        });
         buttonMyRoutes.setOnClickListener(v -> {
             sp = getSharedPreferences("list",MODE_PRIVATE);
             spEditor = sp.edit();
