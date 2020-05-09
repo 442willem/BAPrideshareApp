@@ -48,7 +48,6 @@ public class activity_conversation extends AppCompatActivity {
 
     List<Bericht> berichtList;
 
-    Button buttonBack;
     Button buttonSendMessage;
 
     EditText editTextMessage;
@@ -68,7 +67,6 @@ public class activity_conversation extends AppCompatActivity {
 
         sp = getSharedPreferences("settings", Context.MODE_PRIVATE);
 
-        buttonBack =            findViewById(R.id.btn_conversation_back);
         buttonSendMessage=      findViewById(R.id.btn_conversation_send);
         editTextMessage=        findViewById(R.id.et_conversation_message);
         listViewConversation =  findViewById(R.id.listViewConversation);
@@ -85,11 +83,6 @@ public class activity_conversation extends AppCompatActivity {
 
 
         refreshList();
-
-        buttonBack.setOnClickListener(v -> {
-            Intent goBack = new Intent(activity_conversation.this,activity_conversation_menu.class);
-            startActivity(goBack);
-        });
 
         buttonSendMessage.setOnClickListener(v -> {
 
@@ -116,12 +109,7 @@ public class activity_conversation extends AppCompatActivity {
 
 
             JsonObjectRequest createBericht = new JsonObjectRequest(Request.Method.POST, url,messageObject,
-                    response -> Log.d("message","gelukt"), new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d("messageError",error.toString());
-                }
-            }){
+                    response -> Log.d("message","gelukt"), error -> Log.d("messageError",error.toString())){
                 //authorization header
                 @Override
                 public Map<String, String> getHeaders() throws AuthFailureError {

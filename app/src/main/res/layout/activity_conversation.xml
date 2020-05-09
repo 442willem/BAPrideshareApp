@@ -8,12 +8,6 @@
     tools:context=".activity_conversation"
     android:weightSum="125">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BACK"
-        android:layout_weight="5"
-        android:id="@+id/btn_conversation_back"/>
 
 <LinearLayout
     android:layout_width="match_parent"
