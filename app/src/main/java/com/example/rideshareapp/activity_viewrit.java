@@ -2,6 +2,8 @@ package com.example.rideshareapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -90,7 +93,6 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
     String way[];
 
 
-
     private Route route;
     private Rit rit;
 
@@ -98,14 +100,10 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
     protected void onCreate(Bundle savedInstanceState) {
 
 
-        sp = getSharedPreferences("settings",MODE_PRIVATE);
+        sp = getSharedPreferences("settings", MODE_PRIVATE);
         String apiKey = getString(R.string.google_maps_key);
         rit = (Rit) getIntent().getSerializableExtra("rit");
         route = rit.getRoute();
-
-
-        tussenstops = getTussenstops();
-
 
 
         super.onCreate(savedInstanceState);
@@ -115,10 +113,10 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        if(rit.isGoedgekeurd()){
+        if (rit.isGoedgekeurd()) {
             View accept = findViewById(R.id.button_accept);
             accept.setVisibility(View.GONE);
-        } else{
+        } else {
             View deny = findViewById(R.id.button_deny);
             deny.setVisibility(View.GONE);
         }
@@ -138,7 +136,7 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                 final RequestQueue requestQueue = Volley.newRequestQueue(activity_viewrit.this);
                 Uri.Builder uriBuilder = new Uri.Builder();
                 uriBuilder.scheme("http")
-                        .encodedAuthority("192.168.1.39:8080")
+                        .encodedAuthority("192.168.1.6:8080")
                         .appendPath("G4REST")
                         .appendPath("restApp")
                         .appendPath("rit_service")
@@ -147,33 +145,32 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
 
                 final String url = uriBuilder.build().toString();
 
-                    JsonObjectRequest requestAllRoutes = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(org.json.JSONObject response) {
+                JsonObjectRequest requestAllRoutes = new JsonObjectRequest(Request.Method.POST, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(org.json.JSONObject response) {
 
-                            Log.d("CreateRoute", response.toString());
+                        Log.d("CreateRoute", response.toString());
 
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError errore) {
-                            Toast.makeText(activity_viewrit.this, "The passenger has been accepted", Toast.LENGTH_LONG).show();
-                        }
-                    }) {
-                        //authorization header
-                        @Override
-                        public Map<String, String> getHeaders() throws AuthFailureError {
-                            Map<String, String> params = new HashMap<String, String>();
-                            params.put("Content-Type", "application/json; charset=UTF-8");
-                            params.put("Authorization", ACCESS_TOKEN);
-                            return params;
-                        }
-                    };
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError errore) {
+                        Toast.makeText(activity_viewrit.this, "The passenger has been accepted", Toast.LENGTH_LONG).show();
+                    }
+                }) {
+                    //authorization header
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("Content-Type", "application/json; charset=UTF-8");
+                        params.put("Authorization", ACCESS_TOKEN);
+                        return params;
+                    }
+                };
 
-                    requestQueue.add(requestAllRoutes);
-                    Intent cancel = new Intent(activity_viewrit.this, MainActivity.class);
-                    startActivity(cancel);
-
+                requestQueue.add(requestAllRoutes);
+                Intent cancel = new Intent(activity_viewrit.this, MainActivity.class);
+                startActivity(cancel);
 
 
             }
@@ -188,7 +185,7 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                 final RequestQueue requestQueue = Volley.newRequestQueue(activity_viewrit.this);
                 Uri.Builder uriBuilder = new Uri.Builder();
                 uriBuilder.scheme("http")
-                        .encodedAuthority("192.168.1.39:8080")
+                        .encodedAuthority("192.168.1.6:8080")
                         .appendPath("G4REST")
                         .appendPath("restApp")
                         .appendPath("rit_service")
@@ -225,28 +222,36 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                 startActivity(cancel);
 
 
-
             }
         });
 
 
         Log.d("Maybe", String.valueOf(tussenstops));
 
+        getTussenstops().observe(this, new Observer<List<String>>() {
+
+            @Override
+            public void onChanged(List<String> t) {
+               tussenstops=t;
+               mMap.clear();
+                onMapReady(mMap);
+            }
+        });
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-
+        Log.d("tussenstopopgehaald", String.valueOf(tussenstops.size()));
         mMap = googleMap;
 
         LatLng begin = getLocationFromAddress(route.getBeginpunt());
         LatLng eind = getLocationFromAddress(route.getEindpunt());
         Log.d("begin", String.valueOf(begin));
-        Log.d("eind", (eind.latitude+","+eind.longitude));
+        Log.d("eind", (eind.latitude + "," + eind.longitude));
         ArrayList<LatLng> wayp = new ArrayList<>();
-
-        for (String t : tussenstops){
+        Log.d("aantal", String.valueOf(tussenstops.size()));
+        for (String t : tussenstops) {
             LatLng temp = getLocationFromAddress(t);
             Log.d("temp", String.valueOf(temp));
             mMap.addMarker(new MarkerOptions().position(temp).title("TussenStop!"));
@@ -254,13 +259,13 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
         }
         StringBuilder stbldr = new StringBuilder();
         String next = "";
-        for(int n=0;n<tussenstops.size();n++){
+        for (int n = 0; n < tussenstops.size(); n++) {
             stbldr.append(next);
             stbldr.append(tussenstops.get(n));
-            next="|";
+            next = "|";
         }
         Log.d("tussenstops", stbldr.toString());
-        stbldr.append(rit.getBeginpunt()+"|"+rit.getEindpunt());
+        stbldr.append(rit.getBeginpunt() + "|" + rit.getEindpunt());
         Log.d("JUICY_tussenstops", stbldr.toString());
 
         mMap.addMarker(new MarkerOptions()
@@ -271,14 +276,12 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
 
-
-
         mMap.addMarker(new MarkerOptions().position(begin).title("Start"));
 
 
         mMap.addMarker(new MarkerOptions().position(eind).title("Stop"));
 
-        LatLng zaragoza = new LatLng(41.648823,-0.889085);
+        LatLng zaragoza = new LatLng(41.648823, -0.889085);
         List<LatLng> path = new ArrayList();
 
         GeoApiContext context = new GeoApiContext.Builder()
@@ -286,18 +289,13 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                 .build();
 
 
-        DirectionsApiRequest result = DirectionsApi.newRequest(context).origin((begin.latitude+","+begin.longitude))
-                .destination((eind.latitude+","+eind.longitude))
+        DirectionsApiRequest result = DirectionsApi.newRequest(context).origin((begin.latitude + "," + begin.longitude))
+                .destination((eind.latitude + "," + eind.longitude))
                 .waypoints(stbldr.toString())
                 .optimizeWaypoints(true);
 
 
-
-
-
-
-
-        DirectionsApiRequest req = DirectionsApi.getDirections(context, (begin.latitude+","+begin.longitude), (eind.latitude+","+eind.longitude));
+        DirectionsApiRequest req = DirectionsApi.getDirections(context, (begin.latitude + "," + begin.longitude), (eind.latitude + "," + eind.longitude));
 
 
         try {
@@ -312,14 +310,14 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                 DirectionsRoute route = ser.routes[0];
                 Log.d("R", String.valueOf(res.routes[0]));
 
-                if (route.legs !=null) {
-                    for(int i=0; i<route.legs.length; i++) {
+                if (route.legs != null) {
+                    for (int i = 0; i < route.legs.length; i++) {
                         DirectionsLeg leg = route.legs[i];
                         if (leg.steps != null) {
-                            for (int j=0; j<leg.steps.length;j++){
+                            for (int j = 0; j < leg.steps.length; j++) {
                                 DirectionsStep step = leg.steps[j];
-                                if (step.steps != null && step.steps.length >0) {
-                                    for (int k=0; k<step.steps.length;k++){
+                                if (step.steps != null && step.steps.length > 0) {
+                                    for (int k = 0; k < step.steps.length; k++) {
                                         DirectionsStep step1 = step.steps[k];
                                         EncodedPolyline points1 = step1.polyline;
                                         if (points1 != null) {
@@ -328,7 +326,7 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
 
                                             for (com.google.maps.model.LatLng coord1 : coords1) {
                                                 path.add(new LatLng(coord1.lat, coord1.lng));
-                                                Log.d("Hier", coord1.lat + " " + coord1.lng );
+                                                Log.d("Hier", coord1.lat + " " + coord1.lng);
                                             }
                                         }
                                     }
@@ -347,7 +345,7 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                     }
                 }
             }
-        } catch(Exception ex) {
+        } catch (Exception ex) {
             Log.e("Test", ex.getLocalizedMessage());
         }
 
@@ -362,42 +360,45 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(begin, 12));
 
 
-
     }
-    public LatLng  getLocationFromAddress(String strAddress){
+
+    public LatLng getLocationFromAddress(String strAddress) {
 
         Geocoder coder = new Geocoder(this);
         List<Address> address;
-        LatLng  p1 = null;
+        LatLng p1 = null;
 
         try {
-            address = coder.getFromLocationName(strAddress,5);
+            address = coder.getFromLocationName(strAddress, 5);
 
-            if (address==null) {
+            if (address == null) {
                 return null;
             }
-            Address location=address.get(0);
+            Address location = address.get(0);
             location.getLatitude();
             location.getLongitude();
             Log.d("LAT", String.valueOf(location.getLatitude()));
             Log.d("LNG", String.valueOf(location.getLongitude()));
 
-            p1 = new LatLng ((double) (location.getLatitude() ),
-                    (double) (location.getLongitude() ));
+            p1 = new LatLng((double) (location.getLatitude()),
+                    (double) (location.getLongitude()));
 
             return p1;
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
         return null;
     }
 
-    public List<String> getTussenstops(){
+private MutableLiveData<List<String>> getTussenstops() {
+           MutableLiveData<List<String>> mutableTussenstops = new MutableLiveData<>();
+
         final String ACCESS_TOKEN = sp.getString("Token",null);
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
 
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
-                .encodedAuthority("192.168.1.39:8080")
+                .encodedAuthority("192.168.1.6:8080")
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("route_service")
@@ -410,7 +411,6 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
         json = new Gson();
 
         tussenstops=new ArrayList<>();
-
         JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
             Gson json = new Gson();
 
@@ -424,10 +424,11 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                 }
 
                 tussenstops.add(tussenstop);
-                Log.d("Tussenstop",tussenstops.toString());
+                Log.d("Tussenstophallo",tussenstops.toString());
 
 
             }
+            mutableTussenstops.postValue(tussenstops);
         }, error -> Toast.makeText(activity_viewrit.this,"there was an error getting the waypoints",Toast.LENGTH_SHORT).show()){
             //authorization header
             @Override
@@ -438,6 +439,8 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                 return params;
             }};
         requestQueue.add(requestAllRoutes);
-        return tussenstops;
-    }
+        Log.d("returning tussenstops", String.valueOf(tussenstops.size()));
+    return mutableTussenstops;
 }
+}
+
