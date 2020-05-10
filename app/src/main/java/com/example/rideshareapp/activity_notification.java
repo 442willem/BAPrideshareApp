@@ -78,6 +78,7 @@ public class activity_notification extends AppCompatActivity {
         spEditor=sp.edit();
 
 
+
         buttonRefresh = findViewById(R.id.button_alleNotificaties_refresh);
         listViewAllNotifications = findViewById(R.id.listViewAllNotificaties);
         notificatieList=new ArrayList<>();
@@ -122,7 +123,7 @@ public class activity_notification extends AppCompatActivity {
                     break;
                 case "routeHerinnering":
                     Intent myIntent = new Intent(view.getContext(), activity_myroute.class);
-                    myIntent.putExtra("route", selectedItem.getRit().getRoute());
+                    myIntent.putExtra("route", selectedItem.getRoute());
                     startActivity(myIntent);
                     break;
                 case "ritHerinnering":
