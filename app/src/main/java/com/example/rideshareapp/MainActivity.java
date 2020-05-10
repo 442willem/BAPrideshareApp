@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Intent i= new Intent(this, ScheduledService.class);
+        this.startService(i);
+
         buttonAllRoutes = findViewById(R.id.button_AlleRouten);
         buttonMyRoutes = findViewById(R.id.button_mijnRouten);
         buttonSearchRoutes = findViewById(R.id.button_zoekRoutes);
@@ -55,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         String user = sp.getString("login","error");
         textViewWelcome.setText("Welcome "+user);
+
 
         buttonMyConversations.setOnClickListener(v -> {
             Intent searchRoutes = new Intent(MainActivity.this,activity_conversation_menu.class);
