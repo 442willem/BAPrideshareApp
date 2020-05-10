@@ -39,7 +39,10 @@ import androidx.core.content.ContextCompat;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
@@ -57,6 +60,7 @@ public class activity_notification extends AppCompatActivity {
     Button buttonRefresh;
 
     String url;
+    String url2;
     String ACCESS_TOKEN;
     RequestQueue requestQueue;
 
@@ -92,7 +96,7 @@ public class activity_notification extends AppCompatActivity {
 
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
-                .encodedAuthority("192.168.1.8:8080")
+                .encodedAuthority("192.168.0.184:8080")
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("notification_service")
@@ -112,6 +116,24 @@ public class activity_notification extends AppCompatActivity {
 
             Log.d("geselecteerde", String.valueOf(selectedItem));
             Log.d("type", selectedItem.getMessage());
+
+
+            Uri.Builder uriBuilder2 = new Uri.Builder();
+            uriBuilder2.scheme("http")
+                    .encodedAuthority("192.168.0.184:8080")
+                    .appendPath("G4REST")
+                    .appendPath("restApp")
+                    .appendPath("notification_service")
+                    .appendPath("setGelezen")
+                    .appendPath(String.valueOf(selectedItem.getId()));
+
+            url2 = uriBuilder2.build().toString();
+
+            JsonObjectRequest createProfiel = new JsonObjectRequest(Request.Method.POST, url2,null,
+                    response -> Log.d("notificatie",response.toString()),
+                    error -> Log.d("notificatieError",error.toString()));
+
+            requestQueue.add(createProfiel);
 
 
             switch(selectedItem.getType()) {

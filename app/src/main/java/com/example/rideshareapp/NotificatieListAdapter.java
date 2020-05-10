@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.widget.TextViewCompat;
 
 import java.util.List;
 
@@ -31,6 +32,8 @@ public class NotificatieListAdapter extends ArrayAdapter<Notificatie> {
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent){
         String tijdStamp = getItem(position).getTijdstip().toString();
         String message = getItem(position).getMessage();
+        boolean gelezen = getItem(position).getGelezen();
+
         String routeBegin="";
         String routeEind="";
         if(getItem(position).getRit() != null && getItem(position).getRit().getRoute() != null ){
@@ -44,10 +47,14 @@ public class NotificatieListAdapter extends ArrayAdapter<Notificatie> {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         convertView = inflater.inflate(mResource,parent,false);
 
-        TextView tijd = (TextView) convertView.findViewById(R.id.NotificatieTextView_tijd);
-        TextView bericht = (TextView) convertView.findViewById(R.id.NotificatieTextView_message);
-        TextView begin = (TextView) convertView.findViewById(R.id.NotificatieTextView_begin);
-        TextView eind = (TextView) convertView.findViewById(R.id.NotificatieTextView_eind);
+        TextView tijd = convertView.findViewById(R.id.NotificatieTextView_tijd);
+        TextView bericht = convertView.findViewById(R.id.NotificatieTextView_message);
+        TextView begin = convertView.findViewById(R.id.NotificatieTextView_begin);
+        TextView eind = convertView.findViewById(R.id.NotificatieTextView_eind);
+
+        if(!gelezen){
+            bericht.setTextColor(-65536);
+        }
 
         tijd.setText("Notificatie recieved on: " +tijdStamp);
         bericht.setText(message);

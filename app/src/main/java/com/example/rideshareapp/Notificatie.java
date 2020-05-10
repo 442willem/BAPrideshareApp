@@ -23,6 +23,8 @@ public class Notificatie {
 
     private Timestamp tijdstip;
 
+    private Boolean gelezen;
+
 
     private Date tijdstipDate;
 
@@ -33,6 +35,14 @@ public class Notificatie {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Boolean getGelezen() {
+        return gelezen;
+    }
+
+    public void setGelezen(Boolean gelezen) {
+        this.gelezen = gelezen;
     }
 
     public String getType() {
