@@ -5,21 +5,18 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:id="@+id/NotificatieTextView_tijd"
-        android:textStyle="bold"
-        android:text="begin"/>
-
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:textStyle="bold"
         android:id="@+id/NotificatieTextView_message"
         android:text="eind"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:id="@+id/NotificatieTextView_tijd"
+        android:textStyle="bold"
+        android:text="begin"/>
 
 
     <TextView

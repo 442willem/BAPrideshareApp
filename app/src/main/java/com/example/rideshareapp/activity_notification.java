@@ -110,12 +110,42 @@ public class activity_notification extends AppCompatActivity {
             Notificatie selectedItem = adapter.getItem(position);
 
             Log.d("geselecteerde", String.valueOf(selectedItem));
+            Log.d("type", selectedItem.getMessage());
 
-            if(selectedItem.getRit() !=null) {
-                Intent myIntent = new Intent(view.getContext(), activity_route.class);
-                myIntent.putExtra("route", selectedItem.getRit().getRoute());
-                startActivity(myIntent);
+
+            switch(selectedItem.getType()) {
+                case "betaling":
+                    Toast.makeText(activity_notification.this,"Payment happens on the website!",Toast.LENGTH_SHORT).show();
+                    break;
+                case "review":
+                    Toast.makeText(activity_notification.this,"Reviews happen on the website!",Toast.LENGTH_SHORT).show();
+                    break;
+                case "routeHerinnering":
+                    Intent myIntent = new Intent(view.getContext(), activity_myroute.class);
+                    myIntent.putExtra("route", selectedItem.getRit().getRoute());
+                    startActivity(myIntent);
+                    break;
+                case "ritHerinnering":
+                case "ritAccepted":
+                case "ritChange":
+                    Intent myIntent2 = new Intent(view.getContext(), activity_viewrit_p.class);
+                    myIntent2.putExtra("rit", selectedItem.getRit());
+                    startActivity(myIntent2);
+                    break;
+                case "ritRequest":
+                    Intent myIntent3 = new Intent(view.getContext(), activity_viewrit.class);
+                    myIntent3.putExtra("rit", selectedItem.getRit());
+                    startActivity(myIntent3);
+                    break;
+                case "bericht":
+                    Intent myIntent4 = new Intent(view.getContext(), activity_conversation_menu.class);
+
+                    startActivity(myIntent4);
+                    break;
+                default:
+                    Toast.makeText(activity_notification.this,"Check your notifications!",Toast.LENGTH_SHORT).show();
             }
+
 
         });
 
