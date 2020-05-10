@@ -159,6 +159,9 @@ public class activity_notification extends AppCompatActivity {
                     startActivity(myIntent);
                     break;
                 case "ritHerinnering":
+                    Intent myIntent5 = new Intent(view.getContext(), activity_rit_list.class);
+
+                    startActivity(myIntent5);
                 case "ritAccepted":
                 case "ritChange":
                     Intent myIntent2 = new Intent(view.getContext(), activity_viewrit_p.class);
