@@ -119,7 +119,7 @@ public class activity_searching_routes extends AppCompatActivity {
         Uri.Builder uriBuilder = new Uri.Builder();
         if(soortZoeken == 1){
             uriBuilder.scheme("http")
-                    .encodedAuthority("192.168.0.184:8080")
+                    .encodedAuthority("192.168.1.8:8080")
                     .appendPath("G4REST")
                     .appendPath("restApp")
                     .appendPath("route_service")
@@ -130,7 +130,7 @@ public class activity_searching_routes extends AppCompatActivity {
         }
         else {
             uriBuilder.scheme("http")
-                    .encodedAuthority("192.168.1.39:8080")
+                    .encodedAuthority("192.168.1.8:8080")
                     .appendPath("G4REST")
                     .appendPath("restApp")
                     .appendPath("route_service")

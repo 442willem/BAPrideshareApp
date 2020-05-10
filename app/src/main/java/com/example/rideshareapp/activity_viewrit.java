@@ -136,7 +136,7 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                 final RequestQueue requestQueue = Volley.newRequestQueue(activity_viewrit.this);
                 Uri.Builder uriBuilder = new Uri.Builder();
                 uriBuilder.scheme("http")
-                        .encodedAuthority("192.168.1.6:8080")
+                        .encodedAuthority("192.168.1.8:8080")
                         .appendPath("G4REST")
                         .appendPath("restApp")
                         .appendPath("rit_service")
@@ -185,7 +185,7 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
                 final RequestQueue requestQueue = Volley.newRequestQueue(activity_viewrit.this);
                 Uri.Builder uriBuilder = new Uri.Builder();
                 uriBuilder.scheme("http")
-                        .encodedAuthority("192.168.1.6:8080")
+                        .encodedAuthority("192.168.1.8:8080")
                         .appendPath("G4REST")
                         .appendPath("restApp")
                         .appendPath("rit_service")
@@ -390,7 +390,7 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
     }
 
 private MutableLiveData<List<String>> getTussenstops() {
-           MutableLiveData<List<String>> mutableTussenstops = new MutableLiveData<>();
+        MutableLiveData<List<String>> mutableTussenstops = new MutableLiveData<>();
 
         final String ACCESS_TOKEN = sp.getString("Token",null);
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -398,7 +398,7 @@ private MutableLiveData<List<String>> getTussenstops() {
 
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
-                .encodedAuthority("192.168.1.6:8080")
+                .encodedAuthority("192.168.1.8:8080")
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("route_service")

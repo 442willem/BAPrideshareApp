@@ -87,7 +87,7 @@ public class activity_rit_list extends AppCompatActivity {
         Uri.Builder uriBuilder = new Uri.Builder();
 
             uriBuilder.scheme("http")
-                    .encodedAuthority("192.168.0.184:8080")
+                    .encodedAuthority("192.168.1.8:8080")
                     .appendPath("G4REST")
                     .appendPath("restApp")
                     .appendPath("rit_service")

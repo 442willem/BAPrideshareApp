@@ -98,7 +98,7 @@ public class Login_Activity extends AppCompatActivity {
                         final String login = textUsername.getText().toString().trim();
                         final String password = textPassword.getText().toString().trim();
 
-                        final String url = "http://192.168.0.184:8080/G4REST/restApp/authentication/login?login=" + login + "&password=" + password;
+                        final String url = "http://192.168.1.8:8080/G4REST/restApp/authentication/login?login=" + login + "&password=" + password;
 
                         TokenRequest tokenRequest = new TokenRequest(Request.Method.GET, url, new Response.Listener<String>() {
                             @Override

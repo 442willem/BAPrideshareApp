@@ -85,7 +85,7 @@ public class activity_conversation_menu extends AppCompatActivity {
         //the different urls for every case : my routes , my rides, search rides
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
-                .encodedAuthority("192.168.0.184:8080")
+                .encodedAuthority("192.168.1.8:8080")
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("bericht_service")

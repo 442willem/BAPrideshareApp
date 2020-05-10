@@ -2,6 +2,8 @@ package com.example.rideshareapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -101,11 +103,6 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
         rit = (Rit) getIntent().getSerializableExtra("rit");
         route = rit.getRoute();
 
-
-        tussenstops = getTussenstops();
-
-
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewrit_p);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -127,7 +124,7 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
                 final RequestQueue requestQueue = Volley.newRequestQueue(activity_viewrit_p.this);
                 Uri.Builder uriBuilder = new Uri.Builder();
                 uriBuilder.scheme("http")
-                        .encodedAuthority("192.168.1.39:8080")
+                        .encodedAuthority("192.168.1.8:8080")
                         .appendPath("G4REST")
                         .appendPath("restApp")
                         .appendPath("rit_service")
@@ -170,7 +167,15 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
 
 
         Log.d("Maybe", String.valueOf(tussenstops));
+        getTussenstops().observe(this, new Observer<List<String>>() {
 
+            @Override
+            public void onChanged(List<String> t) {
+                tussenstops=t;
+                mMap.clear();
+                onMapReady(mMap);
+            }
+        });
     }
 
     @Override
@@ -321,14 +326,16 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
         return null;
     }
 
-    public List<String> getTussenstops(){
+    private MutableLiveData<List<String>> getTussenstops() {
+        MutableLiveData<List<String>> mutableTussenstops = new MutableLiveData<>();
+
         final String ACCESS_TOKEN = sp.getString("Token",null);
         final RequestQueue requestQueue = Volley.newRequestQueue(this);
 
 
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
-                .encodedAuthority("192.168.1.39:8080")
+                .encodedAuthority("192.168.1.8:8080")
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("route_service")
@@ -341,7 +348,6 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
         json = new Gson();
 
         tussenstops=new ArrayList<>();
-
         JsonArrayRequest requestAllRoutes = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
             Gson json = new Gson();
 
@@ -355,10 +361,11 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
                 }
 
                 tussenstops.add(tussenstop);
-                Log.d("Tussenstop",tussenstops.toString());
+                Log.d("Tussenstophallo",tussenstops.toString());
 
 
             }
+            mutableTussenstops.postValue(tussenstops);
         }, error -> Toast.makeText(activity_viewrit_p.this,"there was an error getting the waypoints",Toast.LENGTH_SHORT).show()){
             //authorization header
             @Override
@@ -369,7 +376,8 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
                 return params;
             }};
         requestQueue.add(requestAllRoutes);
-        return tussenstops;
+        Log.d("returning tussenstops", String.valueOf(tussenstops.size()));
+        return mutableTussenstops;
     }
 
 

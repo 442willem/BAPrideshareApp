@@ -274,7 +274,7 @@ public class activity_myroute extends FragmentActivity implements OnMapReadyCall
 
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
-                .encodedAuthority("192.168.1.39:8080")
+                .encodedAuthority("192.168.1.8:8080")
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("route_service")
