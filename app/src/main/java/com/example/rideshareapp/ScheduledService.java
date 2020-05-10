@@ -199,6 +199,7 @@ public class ScheduledService extends Service {
             default:
                 Toast.makeText(getApplicationContext().getApplicationContext(),"Check your notifications!",Toast.LENGTH_SHORT).show();
         }
+        type.setGelezen(true);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(mijnIntent);
         PendingIntent resultPendingIntent =
