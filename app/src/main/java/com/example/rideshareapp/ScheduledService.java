@@ -22,6 +22,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
@@ -40,6 +41,7 @@ public class ScheduledService extends Service {
     String url;
     String ACCESS_TOKEN;
     RequestQueue requestQueue;
+    String url2;
 
     List<Notificatie> notificatieList;
     Gson json;
@@ -199,7 +201,28 @@ public class ScheduledService extends Service {
             default:
                 Toast.makeText(getApplicationContext().getApplicationContext(),"Check your notifications!",Toast.LENGTH_SHORT).show();
         }
-        type.setGelezen(true);
+        Uri.Builder uriBuilder2 = new Uri.Builder();
+        uriBuilder2.scheme("http")
+                .encodedAuthority("192.168.1.39:8080")
+                .appendPath("G4REST")
+                .appendPath("restApp")
+                .appendPath("notification_service")
+                .appendPath("setGelezen")
+                .appendPath(String.valueOf(type.getId()));
+
+        url2 = uriBuilder2.build().toString();
+
+        JsonObjectRequest createProfiel = new JsonObjectRequest(Request.Method.POST, url2,null,
+                response -> Log.d("notificatie",response.toString()),
+                error -> Log.d("notificatieError",error.toString())){
+            //authorization header
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                params.put("Content-Type", "application/json; charset=UTF-8");
+                params.put("Authorization", ACCESS_TOKEN);
+                return params;
+            }};
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(mijnIntent);
         PendingIntent resultPendingIntent =
