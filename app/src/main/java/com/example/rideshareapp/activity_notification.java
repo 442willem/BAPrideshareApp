@@ -196,6 +196,9 @@ public class activity_notification extends AppCompatActivity {
 
     private void refreshList(){
 
+        adapter.clear();
+        notificatieList.clear();
+
         JsonArrayRequest requestAllNotoficaties = new JsonArrayRequest(Request.Method.GET, url,null, response -> {
             Gson json = new Gson();
             if(response.length()==0) Toast.makeText(activity_notification.this,"There are no Notifications to show",Toast.LENGTH_LONG).show();
