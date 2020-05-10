@@ -1,5 +1,7 @@
 package com.example.rideshareapp;
 
+import android.content.Intent;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
@@ -24,6 +26,7 @@ class TokenRequest extends StringRequest {
         token = response.headers.get("AUTHORIZATION");
         if(token != null ) {
             return  Response.success(token, HttpHeaderParser.parseCacheHeaders(response));
+
         }
         else return Response.error(new ParseError());
     }

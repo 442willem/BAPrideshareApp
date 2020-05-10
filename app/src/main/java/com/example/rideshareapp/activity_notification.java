@@ -144,8 +144,8 @@ public class activity_notification extends AppCompatActivity {
                     Toast.makeText(activity_notification.this,"Reviews happen on the website!",Toast.LENGTH_SHORT).show();
                     break;
                 case "routeHerinnering":
-                    Intent myIntent = new Intent(view.getContext(), activity_myroute.class);
-                    myIntent.putExtra("route", selectedItem.getRoute());
+                    Intent myIntent = new Intent(view.getContext(), activity_searching_routes.class);
+                    myIntent.putExtra("soort",1);
                     startActivity(myIntent);
                     break;
                 case "ritHerinnering":
