@@ -46,15 +46,15 @@ public class PassagierListAdapter extends ArrayAdapter<Rit> {
         TextView goedgekeurd=convertView.findViewById(R.id.tv_passagier_accepted);
 
 
-        name.setText("name: "+username);
+        name.setText("Name: "+username);
         pickup.setText("Pickup At: "+pickupAdress);
         places.setText("Number of Places: "+number);
 
         if(geaccepteerd){
-            goedgekeurd.setText("accepted: yes");
+            goedgekeurd.setText("Accepted? Yes");
         }
         else{
-            goedgekeurd.setText("accepted: no");
+            goedgekeurd.setText("Accepted? No");
         }
 
         return convertView;

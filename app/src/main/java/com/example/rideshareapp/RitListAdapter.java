@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class RitListAdapter extends ArrayAdapter<Rit> {
@@ -30,6 +32,9 @@ public class RitListAdapter extends ArrayAdapter<Rit> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
 
+
+        String departure = getItem(position).getBeginpunt();
+        String arrival = getItem(position).getEindpunt();
         boolean accepted = getItem(position).isGoedgekeurd();
         int prijs = getItem(position).getPrijs();
         boolean betaald= getItem(position).isBetaald();
@@ -38,26 +43,28 @@ public class RitListAdapter extends ArrayAdapter<Rit> {
         LayoutInflater inflater = LayoutInflater.from(mContext);
 
         convertView = inflater.inflate(mResource,parent,false);
-
+        TextView dep =(TextView) convertView.findViewById(R.id.rideTextView_begin);
+        TextView arr = (TextView) convertView.findViewById(R.id.rideTextView_end);
         TextView begin = (TextView) convertView.findViewById(R.id.routeTextView_begin);
         TextView eind = (TextView) convertView.findViewById(R.id.routeTextView_eind);
         TextView begintijd = (TextView) convertView.findViewById(R.id.routeTextView_begintijd);
         TextView eindtijd = (TextView) convertView.findViewById(R.id.routeTextView_eindtijd);
-
-        begin.setText("departure time: "+begintijdRoute);
-        eind.setText("prices: "+prijs);
+        dep.setText("Departure position: " + departure);
+        arr.setText("Arrival position: " + arrival);
+        begin.setText("Departure time: "+begintijdRoute);
+        eind.setText("Price: €"+prijs);
         if(betaald){
-            eindtijd.setText("payed: yes");
+            eindtijd.setText("Payed? Yes");
         }
         else{
-            eindtijd.setText("payed: no");
+            eindtijd.setText("Payed? No");
         }
 
         if(accepted){
-            begintijd.setText("accepted: yes");
+            begintijd.setText("Accepted? Yes");
         }
         else{
-            begintijd.setText("accepted: no");
+            begintijd.setText("Accepted? No");
         }
 
 

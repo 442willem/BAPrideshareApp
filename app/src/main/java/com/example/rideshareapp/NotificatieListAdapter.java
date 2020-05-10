@@ -49,11 +49,11 @@ public class NotificatieListAdapter extends ArrayAdapter<Notificatie> {
         TextView begin = (TextView) convertView.findViewById(R.id.NotificatieTextView_begin);
         TextView eind = (TextView) convertView.findViewById(R.id.NotificatieTextView_eind);
 
-        tijd.setText("Notificatie op: " +tijdStamp);
+        tijd.setText("Notificatie recieved on: " +tijdStamp);
         bericht.setText(message);
         if(getItem(position).getRit() != null) {
-            begin.setText("Op route van: " + routeBegin);
-            eind.setText("Naar: " + routeEind);
+            begin.setText("On Route from: " + routeBegin);
+            eind.setText("To: " + routeEind);
         }
         return convertView;
 

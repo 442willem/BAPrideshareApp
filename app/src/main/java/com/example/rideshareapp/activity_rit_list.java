@@ -75,7 +75,7 @@ public class activity_rit_list extends AppCompatActivity {
         json = new Gson();
         ridesList=new ArrayList<>();
 
-        adapter = new RitListAdapter(this, R.layout.adapter_view_layout, ridesList);
+        adapter = new RitListAdapter(this, R.layout.adapter_view_rides, ridesList);
 
         listViewAllRoutes.setAdapter(adapter);
 

@@ -43,10 +43,10 @@ public class RouteListAdapter extends ArrayAdapter<Route> {
         TextView begintijd = (TextView) convertView.findViewById(R.id.routeTextView_begintijd);
         TextView eindtijd = (TextView) convertView.findViewById(R.id.routeTextView_eindtijd);
 
-        begin.setText("beginpunt: "+beginRoute);
-        eind.setText("eindpunt: "+eindRoute);
-        eindtijd.setText("eindtijd: "+eindtijdRoute);
-        begintijd.setText("vertrektijd: "+begintijdRoute);
+        begin.setText("Departure at: "+beginRoute);
+        eind.setText("Arrival at: "+eindRoute);
+        eindtijd.setText("Arrival time: "+eindtijdRoute);
+        begintijd.setText("Departure time: "+begintijdRoute);
 
         return convertView;
 

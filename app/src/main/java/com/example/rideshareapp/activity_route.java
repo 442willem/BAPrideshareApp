@@ -322,7 +322,7 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
                     (double) (location.getLongitude() ));
 
             return p1;
-     }catch (Exception e){}
+     }catch (Exception e){Log.wtf("WUT", e);}
         return null;
     }
 
