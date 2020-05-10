@@ -2,7 +2,9 @@ package com.example.rideshareapp;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -112,6 +114,8 @@ public class ScheduledService extends Service {
                                             .setSmallIcon(R.drawable.ic_drive_eta_black_24dp)
                                             .setContentTitle(r.getType())
                                             .setContentText(r.getMessage())
+                                            .setAutoCancel(true)
+                                            .setContentIntent(setNotIntent(r))
                                             .setStyle(new NotificationCompat.BigTextStyle()
                                                     .bigText(r.getMessage()))
                                             .setPriority(NotificationCompat.PRIORITY_DEFAULT);
@@ -155,6 +159,51 @@ public class ScheduledService extends Service {
     public void onDestroy()
     {
         super.onDestroy();
+    }
+
+    public PendingIntent setNotIntent(Notificatie type){
+        Intent mijnIntent= null;
+        switch(type.getType()) {
+            case "betaling":
+                Toast.makeText(getApplicationContext().getApplicationContext(),"Payment happens on the website!",Toast.LENGTH_SHORT).show();
+                break;
+            case "review":
+                Toast.makeText(getApplicationContext().getApplicationContext(),"Reviews happen on the website!",Toast.LENGTH_SHORT).show();
+                break;
+            case "routeHerinnering":
+                mijnIntent= new Intent(getApplicationContext().getApplicationContext(), activity_searching_routes.class);
+                mijnIntent.putExtra("soort",1);
+
+                break;
+            case "ritHerinnering":
+                 mijnIntent = new Intent(getApplicationContext().getApplicationContext(), activity_rit_list.class);
+
+
+                break;
+            case "ritAccepted":
+            case "ritChange":
+                mijnIntent = new Intent(getApplicationContext().getApplicationContext(), activity_viewrit_p.class);
+                mijnIntent.putExtra("rit", type.getRit());
+
+                break;
+            case "ritRequest":
+                mijnIntent = new Intent(getApplicationContext().getApplicationContext(), activity_viewrit.class);
+                mijnIntent.putExtra("rit", type.getRit());
+
+                break;
+            case "bericht":
+                mijnIntent = new Intent(getApplicationContext().getApplicationContext(), activity_conversation_menu.class);
+
+
+                break;
+            default:
+                Toast.makeText(getApplicationContext().getApplicationContext(),"Check your notifications!",Toast.LENGTH_SHORT).show();
+        }
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        stackBuilder.addNextIntentWithParentStack(mijnIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+        return resultPendingIntent;
     }
 
 }
