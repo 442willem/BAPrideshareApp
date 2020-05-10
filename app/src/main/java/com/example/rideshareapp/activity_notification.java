@@ -96,7 +96,7 @@ public class activity_notification extends AppCompatActivity {
 
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
-                .encodedAuthority("192.168.0.184:8080")
+                .encodedAuthority("192.168.1.39:8080")
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("notification_service")
@@ -116,6 +116,7 @@ public class activity_notification extends AppCompatActivity {
 
             Log.d("geselecteerde", String.valueOf(selectedItem));
             Log.d("type", selectedItem.getMessage());
+            Log.d("id", String.valueOf(selectedItem.getId()));
 
 
             Uri.Builder uriBuilder2 = new Uri.Builder();
@@ -131,7 +132,16 @@ public class activity_notification extends AppCompatActivity {
 
             JsonObjectRequest createProfiel = new JsonObjectRequest(Request.Method.POST, url2,null,
                     response -> Log.d("notificatie",response.toString()),
-                    error -> Log.d("notificatieError",error.toString()));
+                    error -> Log.d("notificatieError",error.toString())){
+                //authorization header
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<String, String>();
+                    params.put("Content-Type", "application/json; charset=UTF-8");
+                    params.put("Authorization", ACCESS_TOKEN);
+                    return params;
+                }};
+
 
             requestQueue.add(createProfiel);
 
