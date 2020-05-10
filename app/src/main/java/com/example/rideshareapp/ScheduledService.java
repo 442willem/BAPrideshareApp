@@ -107,21 +107,22 @@ public class ScheduledService extends Service {
                             try {
                                 //r.setProfiel();
                                 r=json.fromJson(response.getJSONObject(i).toString(),Notificatie.class);
-                                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext().getApplicationContext(), CHANNEL_ID)
-                                        .setSmallIcon(R.drawable.ic_drive_eta_black_24dp)
-                                        .setContentTitle(r.getType())
-                                        .setContentText(r.getMessage())
-                                        .setStyle(new NotificationCompat.BigTextStyle()
-                                                .bigText(r.getMessage()))
-                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                                if(!r.getGelezen()) {
+                                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext().getApplicationContext(), CHANNEL_ID)
+                                            .setSmallIcon(R.drawable.ic_drive_eta_black_24dp)
+                                            .setContentTitle(r.getType())
+                                            .setContentText(r.getMessage())
+                                            .setStyle(new NotificationCompat.BigTextStyle()
+                                                    .bigText(r.getMessage()))
+                                            .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-                                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext().getApplicationContext());
+                                    NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext().getApplicationContext());
 
-                                // notificationId is a unique int for each notification that you must define
+                                    // notificationId is a unique int for each notification that you must define
 
-                                notificationManager.notify(teller, builder.build());
-                                teller++;
-
+                                    notificationManager.notify(teller, builder.build());
+                                    teller++;
+                                }
                                 Log.d("Notificatie",r.toString());
                             } catch (JSONException e) {
                                 e.printStackTrace();
