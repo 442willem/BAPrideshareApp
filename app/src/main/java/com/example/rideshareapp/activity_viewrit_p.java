@@ -32,6 +32,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.model.Place;
@@ -193,7 +194,8 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
         for (String t : tussenstops){
             LatLng temp = getLocationFromAddress(t);
             Log.d("temp", String.valueOf(temp));
-            mMap.addMarker(new MarkerOptions().position(temp).title("TussenStop!"));
+            mMap.addMarker(new MarkerOptions().position(temp).title("TussenStop!")
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             wayp.add(temp);
         }
         StringBuilder stbldr = new StringBuilder();
@@ -204,6 +206,15 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
             next="|";
         }
         Log.d("tussenstops", stbldr.toString());
+        stbldr.append(rit.getBeginpunt() + "|" + rit.getEindpunt());
+        Log.d("JUICY_tussenstops", stbldr.toString());
+
+        mMap.addMarker(new MarkerOptions()
+                .position(getLocationFromAddress(rit.getBeginpunt()))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+        mMap.addMarker(new MarkerOptions()
+                .position(getLocationFromAddress(rit.getEindpunt()))
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
 
 
