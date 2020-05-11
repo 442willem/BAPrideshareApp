@@ -1,5 +1,6 @@
 package com.example.rideshareapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentActivity;
 
@@ -74,8 +75,11 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
     private SupportMapFragment mapFragment;
     private View vertrek;
     private View aankomst;
+    private String vertrekpunt;
+    private String aankomstpunt;
     private Button back;
     private Button checkRoute;
+    private int duration;
 
     private SharedPreferences sp;
     private SharedPreferences.Editor spEditor;
@@ -119,6 +123,7 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getName() + ", " + place.getId());
+                vertrekpunt = place.getAddress();
             }
 
             @Override
@@ -136,6 +141,7 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
             public void onPlaceSelected(Place place) {
                 // TODO: Get info about the selected place.
                 Log.i(TAG, "Place: " + place.getAddress() + ", " + place.getId());
+                aankomstpunt = place.getAddress();
             }
 
             @Override
@@ -152,9 +158,10 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        vertrek=  findViewById(R.id.autocomplete_fragment);
-        aankomst= findViewById(R.id.autocomplete_fragment1);
-        checkRoute= (Button) findViewById(R.id.button_route_schrijfin);
+        //vertrek=  findViewById(R.id.autocomplete_fragment);
+        //aankomst= findViewById(R.id.autocomplete_fragment1);
+
+
 
 
         LatLng begin = getLocationFromAddress(route.getBeginpunt());
@@ -204,7 +211,9 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
             next="|";
         }
         Log.d("tussenstops", stbldr.toString());
+        checkRoute= (Button) findViewById(R.id.button_route_schrijfin);
 
+        checkRoute.setOnClickListener(v->calculate(begin, eind, stbldr));
 
 
 
@@ -254,6 +263,8 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
                         if (leg.steps != null) {
                             for (int j=0; j<leg.steps.length;j++){
                                 DirectionsStep step = leg.steps[j];
+                                Log.d("duration", String.valueOf(leg.duration.inSeconds));
+                                duration = (int) (duration + leg.duration.inSeconds);
                                 if (step.steps != null && step.steps.length >0) {
                                     for (int k=0; k<step.steps.length;k++){
                                         DirectionsStep step1 = step.steps[k];
@@ -376,6 +387,69 @@ public class activity_route extends FragmentActivity implements OnMapReadyCallba
         requestQueue.add(requestAllRoutes);
         return tussenstops;
     }
+
+    public void calculate(LatLng begin, LatLng eind, StringBuilder stbldr){
+        //hier de nieuwe tussenstops bijsteken, die van de text
+
+
+        stbldr.append("|" + vertrekpunt+ "|"+aankomstpunt);
+
+        GeoApiContext context = new GeoApiContext.Builder()
+                .apiKey("AIzaSyAUI3IbCN38MjQJgCJptMXN4NluM7EdHns")
+                .build();
+
+
+        DirectionsApiRequest result = DirectionsApi.newRequest(context).origin((begin.latitude+","+begin.longitude))
+                .destination((eind.latitude+","+eind.longitude))
+                .waypoints(stbldr.toString())
+                .optimizeWaypoints(true);
+
+
+
+
+
+
+
+        DirectionsApiRequest req = DirectionsApi.getDirections(context, (begin.latitude+","+begin.longitude), (eind.latitude+","+eind.longitude));
+
+
+        try {
+            DirectionsResult res = req.await();
+            DirectionsResult ser = result.await();
+            Log.d("Mss", String.valueOf(ser.routes[0]));
+
+
+            //Loop through legs and steps to get encoded polylines of each step
+            if (ser.routes != null && ser.routes.length > 0) {
+                Log.d("HIER", "HIER opnieuw");
+                DirectionsRoute route = ser.routes[0];
+                Log.d("R", String.valueOf(res.routes[0]));
+
+                if (route.legs !=null) {
+                    for(int i=0; i<route.legs.length; i++) {
+                        DirectionsLeg leg = route.legs[i];
+                        if (leg.steps != null) {
+                            for (int j=0; j<leg.steps.length;j++){
+                                DirectionsStep step = leg.steps[j];
+                                Log.d("duration", String.valueOf(leg.duration.inSeconds));
+                                duration = (int) (duration + leg.duration.inSeconds);
+
+                            }
+                        }
+                    }
+                }
+            }
+        } catch(Exception ex) {
+            Log.e("Test", ex.getLocalizedMessage());
+        }
+
+
+        Log.d("totDuration", String.valueOf(duration));
+
+    }
+
+
+
 
 
 
