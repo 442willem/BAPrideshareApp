@@ -56,7 +56,7 @@ public class NotificatieListAdapter extends ArrayAdapter<Notificatie> {
             bericht.setTextColor(-65536);
         }
 
-        tijd.setText("Notificatie recieved on: " +tijdStamp);
+        tijd.setText("Notification recieved on: " +tijdStamp);
         bericht.setText(message);
         if(getItem(position).getRit() != null) {
             begin.setText("On Route from: " + routeBegin);
