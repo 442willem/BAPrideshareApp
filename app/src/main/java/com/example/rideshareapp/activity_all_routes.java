@@ -80,7 +80,7 @@ public class activity_all_routes extends AppCompatActivity {
 
         Uri.Builder uriBuilder = new Uri.Builder();
         uriBuilder.scheme("http")
-                .encodedAuthority("192.168.1.8:8080")
+                .encodedAuthority("192.168.0.184:8080")
                 .appendPath("G4REST")
                 .appendPath("restApp")
                 .appendPath("route_service")
