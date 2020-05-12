@@ -51,6 +51,7 @@ public class ScheduledService extends Service {
     SharedPreferences.Editor spEditor;
     private int teller = 0;
 
+    //nodig om de push notificaties op de gsm weer te geven
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -79,7 +80,7 @@ public class ScheduledService extends Service {
     {
         super.onCreate();
         createNotificationChannel();
-
+        //timer is nodig om als de app in de achtergrond zit toch nog om de 5 minuten de notificaties binnen krijgen
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -90,7 +91,7 @@ public class ScheduledService extends Service {
                 requestQueue = Volley.newRequestQueue(getApplicationContext().getApplicationContext());
                 username = sp.getString("login",null);
 
-
+                //rest call om alle notificaties op te vragen
                 Uri.Builder uriBuilder = new Uri.Builder();
                 uriBuilder.scheme("http")
                         .encodedAuthority("192.168.1.39:8080")
@@ -110,13 +111,17 @@ public class ScheduledService extends Service {
                             Notificatie r = new Notificatie();
                             try {
                                 //r.setProfiel();
+                                //Json antwoord parsen
                                 r=json.fromJson(response.getJSONObject(i).toString(),Notificatie.class);
+                                //filteren op alle niet gelezen notificaties
                                 if(!r.getGelezen()) {
+                                    //nieuwe notificatie builden
                                     NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext().getApplicationContext(), CHANNEL_ID)
                                             .setSmallIcon(R.drawable.ic_drive_eta_black_24dp)
                                             .setContentTitle(r.getType())
                                             .setContentText(r.getMessage())
                                             .setAutoCancel(true)
+                                            //de intent hangt af van welke notificatie binnenkomt
                                             .setContentIntent(setNotIntent(r))
                                             .setStyle(new NotificationCompat.BigTextStyle()
                                                     .bigText(r.getMessage()))
@@ -165,6 +170,7 @@ public class ScheduledService extends Service {
 
     public PendingIntent setNotIntent(Notificatie type){
         Intent mijnIntent= null;
+        //switch case maken voor de type notificatie die binnenkomt
         switch(type.getType()) {
             case "betaling":
                 Toast.makeText(getApplicationContext().getApplicationContext(),"Payment happens on the website!",Toast.LENGTH_SHORT).show();
@@ -201,6 +207,7 @@ public class ScheduledService extends Service {
             default:
                 Toast.makeText(getApplicationContext().getApplicationContext(),"Check your notifications!",Toast.LENGTH_SHORT).show();
         }
+        //nadat de gebruiker de notificatie opent zal deze ook op gelezen staan
         Uri.Builder uriBuilder2 = new Uri.Builder();
         uriBuilder2.scheme("http")
                 .encodedAuthority("192.168.1.39:8080")
@@ -223,6 +230,7 @@ public class ScheduledService extends Service {
                 params.put("Authorization", ACCESS_TOKEN);
                 return params;
             }};
+        //Pending intent van maken omdat notificaties enkel daarmee werken
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
         stackBuilder.addNextIntentWithParentStack(mijnIntent);
         PendingIntent resultPendingIntent =

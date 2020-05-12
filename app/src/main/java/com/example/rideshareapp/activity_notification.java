@@ -145,7 +145,7 @@ public class activity_notification extends AppCompatActivity {
 
             requestQueue.add(createProfiel);
 
-
+            //per notificatie type een andere intent opzetten
             switch(selectedItem.getType()) {
                 case "betaling":
                     Toast.makeText(activity_notification.this,"Payment happens on the website!",Toast.LENGTH_SHORT).show();

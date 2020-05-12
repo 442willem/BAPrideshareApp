@@ -116,6 +116,8 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
         LatLng begin = getLocationFromAddress(route.getBeginpunt());
         LatLng eind = getLocationFromAddress(route.getEindpunt());
 
+        //De rit request van de huidige passagier op de route cancellen
+        //dit lukt enkel als de driver hem nog niet heeft geaccepteerd
         buttonCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -210,10 +212,10 @@ public class activity_viewrit_p extends FragmentActivity implements OnMapReadyCa
         Log.d("JUICY_tussenstops", stbldr.toString());
 
         mMap.addMarker(new MarkerOptions()
-                .position(getLocationFromAddress(rit.getBeginpunt()))
+                .position(getLocationFromAddress(rit.getBeginpunt())).title("Your TussenStop!")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
         mMap.addMarker(new MarkerOptions()
-                .position(getLocationFromAddress(rit.getEindpunt()))
+                .position(getLocationFromAddress(rit.getEindpunt())).title("Your TussenStop!")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
 
 

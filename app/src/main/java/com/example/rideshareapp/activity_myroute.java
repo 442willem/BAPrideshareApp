@@ -97,7 +97,7 @@ public class activity_myroute extends FragmentActivity implements OnMapReadyCall
         String apiKey = getString(R.string.google_maps_key);
 
 
-
+        //alle geaccepteerde tussenstops opvragen
         tussenstops = getTussenstops();
 
 
@@ -130,7 +130,7 @@ public class activity_myroute extends FragmentActivity implements OnMapReadyCall
         Log.d("begin", String.valueOf(begin));
         Log.d("eind", (eind.latitude+","+eind.longitude));
         ArrayList<LatLng> wayp = new ArrayList<>();
-
+        //voor alle tussenstops een marker toevoegen zodat ze ook op de map zichtbaar zijn
         for (String t : tussenstops){
             LatLng temp = getLocationFromAddress(t);
             Log.d("temp", String.valueOf(temp));
@@ -139,6 +139,7 @@ public class activity_myroute extends FragmentActivity implements OnMapReadyCall
         }
         StringBuilder stbldr = new StringBuilder();
         String next = "";
+        //ook deze van de huidige rit erbij toevoegen
         for(int n=0;n<tussenstops.size();n++){
             stbldr.append(next);
             stbldr.append(tussenstops.get(n));

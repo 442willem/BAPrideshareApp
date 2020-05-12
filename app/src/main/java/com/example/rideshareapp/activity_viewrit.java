@@ -113,6 +113,9 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //de knop die zichtbaar is is enkel diegene die relevant is
+        //als rit al geaccepteerd --> enkel nog cancellen
+        //als rit nog niet geaccepteerd --> enkel nog accepteren
         if (rit.isGoedgekeurd()) {
             View accept = findViewById(R.id.button_accept);
             accept.setVisibility(View.GONE);
@@ -127,6 +130,7 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
         LatLng begin = getLocationFromAddress(route.getBeginpunt());
         LatLng eind = getLocationFromAddress(route.getEindpunt());
 
+        //de rest-calls achter beide knoppen
         buttonAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,6 +255,8 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
         Log.d("eind", (eind.latitude + "," + eind.longitude));
         ArrayList<LatLng> wayp = new ArrayList<>();
         Log.d("aantal", String.valueOf(tussenstops.size()));
+
+        //alle tussenstops op de map weergeven
         for (String t : tussenstops) {
             LatLng temp = getLocationFromAddress(t);
             Log.d("temp", String.valueOf(temp));
@@ -259,6 +265,7 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
         }
         StringBuilder stbldr = new StringBuilder();
         String next = "";
+        //ze ook toevoegen aan de stringbuilder om ze mee te sturen met de directionsrequest
         for (int n = 0; n < tussenstops.size(); n++) {
             stbldr.append(next);
             stbldr.append(tussenstops.get(n));
@@ -268,6 +275,7 @@ public class activity_viewrit extends FragmentActivity implements OnMapReadyCall
         stbldr.append(rit.getBeginpunt() + "|" + rit.getEindpunt());
         Log.d("JUICY_tussenstops", stbldr.toString());
 
+        //de markers van de huidige rit die de driver is aan het inspecteren in een aparte kleur zetten zodat hij zou opvallen
         mMap.addMarker(new MarkerOptions()
                 .position(getLocationFromAddress(rit.getBeginpunt()))
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
